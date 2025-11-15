@@ -1,0 +1,83 @@
+#ifndef IKK_TIME_HPP
+#define IKK_TIME_HPP
+
+#include <cstdint>
+#include <chrono>
+
+#include "InariKonKon/Utility/Utility.hpp"
+
+namespace ikk
+{
+    class Time final
+    {
+    public:
+        [[nodiscard]] constexpr Time() noexcept = default;
+
+        template<class Rep, class Period>
+        explicit constexpr Time(const std::chrono::duration<Rep, Period>& duration) noexcept;
+
+        constexpr ~Time() noexcept = default;
+
+        constexpr Time(const Time&) noexcept = default;
+        constexpr Time(Time&&) noexcept = default;
+
+        constexpr Time& operator=(const Time&) noexcept = default;
+        constexpr Time& operator=(Time&&) noexcept = default;
+
+        [[nodiscard]] constexpr float asSeconds() const noexcept;
+        [[nodiscard]] constexpr std::int32_t asMilliseconds() const noexcept;
+        [[nodiscard]] constexpr std::int64_t asMicroseconds() const noexcept;
+
+        template<class ToDur>
+        [[nodiscard]] constexpr auto toDuration() const noexcept;
+
+        [[nodiscard]] auto operator<=>(const Time&) const = default;
+    private:
+        std::chrono::microseconds m_value{};
+    };
+
+    template<class Rep, class Period>
+    constexpr Time::Time(const std::chrono::duration<Rep, Period>& duration) noexcept
+        : m_value(std::chrono::duration_cast<std::chrono::microseconds>(duration))
+    {
+    }
+
+    constexpr float Time::asSeconds() const noexcept
+    {
+        return FLOAT(this->m_value.count() / 1000000.f);
+    }
+
+    constexpr std::int32_t Time::asMilliseconds() const noexcept
+    {
+        return I32(this->m_value.count() / 1000u);
+    }
+
+    constexpr std::int64_t Time::asMicroseconds() const noexcept
+    {
+        return I64(this->m_value.count());
+    }
+
+    template<class ToDur>
+    constexpr auto Time::toDuration() const noexcept
+    {
+        return std::chrono::duration_cast<ToDur>(this->m_value);
+    }
+
+    [[nodiscard]] inline constexpr Time seconds(float amount) noexcept
+    {
+        amount = (amount >= 0.f) ? amount : 0.f;
+        return Time(std::chrono::duration<float, std::ratio<1, 1>>(amount));
+    }
+
+    [[nodiscard]] inline constexpr Time milliseconds(std::uint32_t amount) noexcept
+    {
+        return Time(std::chrono::milliseconds(amount));
+    }
+
+    [[nodiscard]] inline constexpr Time microseconds(std::uint64_t amount) noexcept
+    {
+        return Time(std::chrono::microseconds(amount));
+    }
+}
+
+#endif
