@@ -11,7 +11,7 @@ namespace ikk
     public:
         enum struct Type : std::uint8_t
         {
-            FPS, ThirdPerson
+            FirstPerson, ThirdPerson
         };
 
         enum struct Projection : std::uint8_t
@@ -56,7 +56,7 @@ namespace ikk
         float m_horizontalSensitivity = 0.1f;
         float m_verticalSensitivity = 0.1f;
 
-        Type m_type = Type::FPS;
+        Type m_type = Type::FirstPerson;
     };
 
     template<Camera::Projection P> requires (P == Camera::Projection::Perspective)

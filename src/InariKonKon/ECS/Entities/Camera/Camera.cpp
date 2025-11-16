@@ -7,7 +7,7 @@ namespace ikk
     Camera::Camera(Type type, Vec3f position, float pitch, float yaw, float nearPlane, float farPlane) noexcept
         : m_nearPlane(nearPlane), m_farPlane(farPlane), m_type(type)
     {
-        this->addComponent(Transform3D{ position, RotationDegf{ pitch, yaw, 0.f } });
+        this->addComponent(Transform3D{ position, RotationDegf{ pitch, yaw, 0.f }});
     }
 
     Camera::Camera(const Camera& other) noexcept
@@ -88,7 +88,7 @@ namespace ikk
         Transform3D& transform = this->getTransform();
         switch (this->m_type)
         {
-        case Type::FPS:
+        case Type::FirstPerson:
         {
             transform.rotateGlobal(Degree{offset.x()}, worldUp);
 
@@ -123,7 +123,7 @@ namespace ikk
             transform.getLocalRotation().normalize();
 
             // If camera has a parent (the target entity)
-            if (Transform3D* parent = transform.m_parent; parent != nullptr)
+            if (Transform3D* parent = transform.getParent(); parent != nullptr)
             {
                 // Get parent's world position
                 const Vec3f targetPos = parent->getWorldPosition();

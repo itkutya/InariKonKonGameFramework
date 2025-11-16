@@ -11,15 +11,14 @@ class TestApp : public ikk::Application
 {
 public:
     TestApp() noexcept
-        : ikk::Application(u8"Title", ikk::Renderer::Type::OpenGL),
-        button(this->getWindow())
+        : ikk::Application(u8"Title", ikk::Renderer::Type::OpenGL), button(this->getWindow())
     {
         drawable.addComponent(ikk::Drawable{ model, vertex, fragment, camera });
-        ikk::Transform3D transform{};
+        ikk::Transform3D transform{{},ikk::RotationDegf{}};
         drawable.addComponent(std::move(transform));
 
         drawable2.addComponent(ikk::Drawable{ model, vertex, fragment, camera });
-        ikk::Transform3D transform2{};
+        ikk::Transform3D transform2{{},ikk::RotationDegf{}};
         transform2.translateGlobal({1.f, 0.f, 0.f});
         drawable2.addComponent(std::move(transform2));
 
