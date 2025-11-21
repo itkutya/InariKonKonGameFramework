@@ -1,18 +1,17 @@
 #ifndef IKK_TRANSFORM_HPP
 #define IKK_TRANSFORM_HPP
 
-#include <vector>
-
 #include "InariKonKon/Utility/NonConstructible.hpp"
+#include "InariKonKon/ECS/Entities/Hierarchy.hpp"
 #include "InariKonKon/Math/GlobalVectors.hpp"
 #include "InariKonKon/Math/Quaternion.hpp"
 
 namespace ikk
 {
-    template <Dimension D>
+    template<Dimension D>
     struct TransformData;
 
-    template <>
+    template<>
     struct TransformData<Dimension::_2D> final : public NonConstructible
     {
         using VecType = Vec2f;
@@ -23,7 +22,7 @@ namespace ikk
         using ScaleType = Vec2f;
     };
 
-    template <>
+    template<>
     struct TransformData<Dimension::_3D> final : public NonConstructible
     {
         using VecType = Vec3f;
@@ -35,224 +34,221 @@ namespace ikk
     };
 
     template<Dimension D>
-    class [[nodiscard]] Transform final
+    class [[nodiscard]] Transform final : public Hierarchy<Transform<D>>
     {
     public:
+        using VecType = TransformData<D>::VecType;
+        using MatType = TransformData<D>::MatType;
+
+        using PositionType = TransformData<D>::PositionType;
+        using RotationType = TransformData<D>::RotationType;
+        using ScaleType = TransformData<D>::ScaleType;
+
         [[nodiscard]] Transform() noexcept = default;
-        [[nodiscard]] Transform(TransformData<D>::PositionType position, RotationDegf rotation, TransformData<D>::ScaleType scale = typename TransformData<D>::ScaleType(1.f)) noexcept;
-        [[nodiscard]] Transform(TransformData<D>::PositionType position, RotationRadf rotation, TransformData<D>::ScaleType scale = typename TransformData<D>::ScaleType(1.f)) noexcept;
+        [[nodiscard]] Transform(PositionType position, RotationDegf rotation, ScaleType scale = ScaleType(1.f)) noexcept;
+        [[nodiscard]] Transform(PositionType position, RotationRadf rotation, ScaleType scale = ScaleType(1.f)) noexcept;
+
+        Transform(const Transform&) noexcept = default;
+        Transform(Transform&&) noexcept = default;
+
+        Transform& operator=(const Transform&) noexcept = default;
+        Transform& operator=(Transform&&) noexcept = default;
+
+        ~Transform() noexcept = default;
+
+        const MatType getLocalMatrix() const noexcept;
+        const MatType getWorldMatrix() const noexcept;
+
+        [[nodiscard]] const PositionType& getLocalPosition() const noexcept;
+        [[nodiscard]] const RotationType& getLocalRotation() const noexcept;
+        [[nodiscard]] const ScaleType& getLocalScale() const noexcept;
+
+        [[nodiscard]] PositionType& getLocalPosition() noexcept;
+        [[nodiscard]] RotationType& getLocalRotation() noexcept;
+        [[nodiscard]] ScaleType& getLocalScale() noexcept;
+
+        [[nodiscard]] const PositionType getWorldPosition() const noexcept;
+        [[nodiscard]] const RotationType getWorldRotation() const noexcept;
+        [[nodiscard]] const ScaleType getWorldScale() const noexcept;
+
+        [[nodiscard]] const VecType getRight() const noexcept;
+        [[nodiscard]] const VecType getUp() const noexcept;
+        [[nodiscard]] const VecType getForward() const noexcept;
+
+        void translateLocal(PositionType position) noexcept;
+        void translateGlobal(PositionType position) noexcept;
+
+        void rotateLocal(Degree<float> degree, VecType direction) noexcept;
+        void rotateLocal(Radian<float> radian, VecType direction) noexcept;
+        void rotateGlobal(Degree<float> degree, VecType axes) noexcept;
+        void rotateGlobal(Radian<float> radian, VecType axes) noexcept;
+
+        void setLocalScale(ScaleType scale) noexcept;
+        void setWorldScale(ScaleType scale) noexcept;
+    private:
+        PositionType m_localPosition = PositionType(0.f);
+        RotationType m_localRotation = RotationType();
+        ScaleType m_localScale = ScaleType(1.f);
 
         //TODO:
-        //These...
-        Transform(const Transform& other) noexcept = default;
-        Transform(Transform&& other) noexcept = default;
+        PositionType m_targetPosition = PositionType(0.f);
+        RotationType m_targetRotation = RotationType();
+        ScaleType m_targetScale = ScaleType(1.f);
 
-        Transform& operator=(const Transform& other) noexcept = default;
-        Transform& operator=(Transform&& other) noexcept = default;
+        mutable bool m_dirty = true;
+        mutable MatType m_localMatrix = MatType::Identity();
+        mutable MatType m_worldMatrix = MatType::Identity();
 
-        ~Transform() noexcept;
-
-        const TransformData<D>::MatType getLocalMatrix() const noexcept;
-        const TransformData<D>::MatType getWorldMatrix() const noexcept;
-
-        [[nodiscard]] const TransformData<D>::PositionType& getLocalPosition() const noexcept;
-        [[nodiscard]] const TransformData<D>::RotationType& getLocalRotation() const noexcept;
-        [[nodiscard]] const TransformData<D>::ScaleType& getLocalScale() const noexcept;
-
-        [[nodiscard]] TransformData<D>::PositionType& getLocalPosition() noexcept;
-        [[nodiscard]] TransformData<D>::RotationType& getLocalRotation() noexcept;
-        [[nodiscard]] TransformData<D>::ScaleType& getLocalScale() noexcept;
-
-        [[nodiscard]] const TransformData<D>::PositionType getWorldPosition() const noexcept;
-        [[nodiscard]] const TransformData<D>::RotationType getWorldRotation() const noexcept;
-        [[nodiscard]] const TransformData<D>::ScaleType getWorldScale() const noexcept;
-
-        [[nodiscard]] const TransformData<D>::VecType getRight() const noexcept;
-        [[nodiscard]] const TransformData<D>::VecType getUp() const noexcept;
-        [[nodiscard]] const TransformData<D>::VecType getForward() const noexcept;
-
-        void translateLocal(TransformData<D>::PositionType position) noexcept;
-        void translateGlobal(TransformData<D>::PositionType position) noexcept;
-
-        void rotateLocal(Degree<float> degree, TransformData<D>::VecType direction) noexcept;
-        void rotateLocal(Radian<float> radian, TransformData<D>::VecType direction) noexcept;
-        void rotateGlobal(Degree<float> degree, TransformData<D>::VecType axes) noexcept;
-        void rotateGlobal(Radian<float> radian, TransformData<D>::VecType axes) noexcept;
-
-        void setLocalScale(TransformData<D>::ScaleType scale) noexcept;
-        void setWorldScale(TransformData<D>::ScaleType scale) noexcept;
-
-        const Transform* getParent() const noexcept;
-        Transform* getParent() noexcept;
-
-        const std::vector<Transform*>& getChildren() const noexcept;
-        std::vector<Transform*>& getChildren() noexcept;
-
-        void setParent(Transform& parent) noexcept;
-        void addChild(Transform& child) noexcept;
-        void removeChild(Transform& child) noexcept;
-    private:
-        TransformData<D>::PositionType m_localPosition{};
-        TransformData<D>::RotationType m_localRotation{};
-        TransformData<D>::ScaleType m_localScale{};
-
-        Transform* m_parent = nullptr;
-        std::vector<Transform*> m_children{};
+        void recalculateMatricies() const noexcept;
     };
 
+    using Transform2D = Transform<Dimension::_2D>;
+    using Transform3D = Transform<Dimension::_3D>;
+
     template<Dimension D>
-    Transform<D>::Transform(TransformData<D>::PositionType position, RotationDegf rotation, TransformData<D>::ScaleType scale) noexcept
+    Transform<D>::Transform(PositionType position, RotationDegf rotation, ScaleType scale) noexcept
         : m_localPosition(position), m_localRotation(rotation), m_localScale(scale)
     {
     }
 
     template<Dimension D>
-    Transform<D>::Transform(TransformData<D>::PositionType position, RotationRadf rotation, TransformData<D>::ScaleType scale) noexcept
+    Transform<D>::Transform(PositionType position, RotationRadf rotation, ScaleType scale) noexcept
         : m_localPosition(position), m_localRotation(rotation), m_localScale(scale)
     {
     }
 
     template<Dimension D>
-    Transform<D>::~Transform() noexcept
+    const Transform<D>::MatType Transform<D>::getLocalMatrix() const noexcept
     {
-        for (Transform* child : this->m_children)
-            if (child != nullptr)
-                child->m_parent = nullptr;
-        this->m_children.clear();
+        if (this->m_dirty == true)
+            this->recalculateMatricies();
+        return this->m_localMatrix;
     }
 
     template<Dimension D>
-    const TransformData<D>::MatType Transform<D>::getLocalMatrix() const noexcept
+    const Transform<D>::MatType Transform<D>::getWorldMatrix() const noexcept
     {
-        Mat4x4f translation = Mat4x4f::Identity();
-        translation.setColumn(3, Vec4f{ this->m_localPosition.x(), this->m_localPosition.y(), this->m_localPosition.z(), 1.f });
-
-        const Mat4x4f rotation = this->m_localRotation.toMat4x4();
-
-        Mat4x4f scale = Mat4x4f::Identity();
-        scale.at(0, 0) = this->m_localScale.x();
-        scale.at(1, 1) = this->m_localScale.y();
-        scale.at(2, 2) = this->m_localScale.z();
-
-        return translation * rotation * scale;
+        if (this->m_dirty == true)
+            this->recalculateMatricies();
+        return this->m_worldMatrix;
     }
 
     template<Dimension D>
-    const TransformData<D>::MatType Transform<D>::getWorldMatrix() const noexcept
-    {
-        if (this->m_parent != nullptr)
-            return this->m_parent->getWorldMatrix() * this->getLocalMatrix();
-        else
-            return this->getLocalMatrix();
-    }
-
-    template<Dimension D>
-    const TransformData<D>::PositionType& Transform<D>::getLocalPosition() const noexcept
+    const Transform<D>::PositionType& Transform<D>::getLocalPosition() const noexcept
     {
         return this->m_localPosition;
     }
 
     template<Dimension D>
-    const TransformData<D>::RotationType& Transform<D>::getLocalRotation() const noexcept
+    const Transform<D>::RotationType& Transform<D>::getLocalRotation() const noexcept
     {
         return this->m_localRotation;
     }
 
     template<Dimension D>
-    const TransformData<D>::ScaleType& Transform<D>::getLocalScale() const noexcept
+    const Transform<D>::ScaleType& Transform<D>::getLocalScale() const noexcept
     {
         return this->m_localScale;
     }
 
     template<Dimension D>
-    TransformData<D>::PositionType& Transform<D>::getLocalPosition() noexcept
+    Transform<D>::PositionType& Transform<D>::getLocalPosition() noexcept
     {
         return this->m_localPosition;
     }
 
     template<Dimension D>
-    TransformData<D>::RotationType& Transform<D>::getLocalRotation() noexcept
+    Transform<D>::RotationType& Transform<D>::getLocalRotation() noexcept
     {
         return this->m_localRotation;
     }
 
     template<Dimension D>
-    TransformData<D>::ScaleType& Transform<D>::getLocalScale() noexcept
+    Transform<D>::ScaleType& Transform<D>::getLocalScale() noexcept
     {
         return this->m_localScale;
     }
 
     template<Dimension D>
-    const TransformData<D>::PositionType Transform<D>::getWorldPosition() const noexcept
+    const Transform<D>::PositionType Transform<D>::getWorldPosition() const noexcept
     {
-        if (this->m_parent != nullptr)
-            return this->m_parent->getWorldPosition() + (this->m_parent->getWorldRotation() * (this->m_parent->getWorldScale() * this->m_localPosition));
+        if (this->getParent() != nullptr)
+            return this->getParent()->getWorldPosition() + (this->getParent()->getWorldRotation() * (this->getParent()->getWorldScale() * this->m_localPosition));
         return this->m_localPosition;
     }
 
     template<Dimension D>
-    const TransformData<D>::RotationType Transform<D>::getWorldRotation() const noexcept
+    const Transform<D>::RotationType Transform<D>::getWorldRotation() const noexcept
     {
-        if (this->m_parent != nullptr)
-            return this->m_parent->getWorldRotation() * this->m_localRotation;
+        if (this->getParent() != nullptr)
+            return this->getParent()->getWorldRotation() * this->m_localRotation;
         return this->m_localRotation;
     }
 
     template<Dimension D>
-    const TransformData<D>::ScaleType Transform<D>::getWorldScale() const noexcept
+    const Transform<D>::ScaleType Transform<D>::getWorldScale() const noexcept
     {
-        if (this->m_parent != nullptr)
-            return this->m_parent->getWorldScale() * this->m_localScale;
+        if (this->getParent() != nullptr)
+            return this->getParent()->getWorldScale() * this->m_localScale;
         return this->m_localScale;
     }
 
     template<Dimension D>
-    const TransformData<D>::VecType Transform<D>::getRight() const noexcept
+    const Transform<D>::VecType Transform<D>::getRight() const noexcept
     {
         return this->getWorldRotation() * worldRight;
     }
 
     template<Dimension D>
-    const TransformData<D>::VecType Transform<D>::getUp() const noexcept
+    const Transform<D>::VecType Transform<D>::getUp() const noexcept
     {
         return this->getWorldRotation() * worldUp;
     }
 
     template<Dimension D>
-    const TransformData<D>::VecType Transform<D>::getForward() const noexcept
+    const Transform<D>::VecType Transform<D>::getForward() const noexcept
     {
         return this->getWorldRotation() * worldForward;
     }
 
     template<Dimension D>
-    void Transform<D>::translateLocal(TransformData<D>::PositionType position) noexcept
+    void Transform<D>::translateLocal(Transform<D>::PositionType position) noexcept
     {
         this->m_localPosition += this->m_localRotation * position;
+        this->m_dirty = true;
     }
 
     template<Dimension D>
-    void Transform<D>::translateGlobal(TransformData<D>::PositionType position) noexcept
+    void Transform<D>::translateGlobal(Transform<D>::PositionType position) noexcept
     {
-        if (this->m_parent == nullptr)
+        if (this->getParent() != nullptr)
         {
-            this->m_localPosition += position;
-            return;
+            Transform<D>::MatType inv = this->getParent()->getWorldMatrix();
+            inv.inverse();
+            if constexpr (D == Dimension::_2D)
+            {
+                const Vec3f transformed = inv * Vec3f{ position.x(), position.y(), 0.0f };
+                this->m_localPosition += Vec2f{ transformed.x(), transformed.y() };
+            }
+            else
+            {
+                const Vec4f transformed = inv * Vec4f{ position.x(), position.y(), position.z(), 0.0f };
+                this->m_localPosition += Vec3f{ transformed.x(), transformed.y(), transformed.z() };
+            }
+            this->m_dirty = true;
         }
-
-        Mat4x4f inv = this->m_parent->getWorldMatrix();
-        inv.inverse();
-        const Vec4f transformed = inv * Vec4f{ position.x(), position.y(), position.z(), 0.0f };
-        this->m_localPosition += Vec3f{ transformed.x(), transformed.y(), transformed.z() };
+        else
+            this->translateLocal(position);
     }
 
     template<Dimension D>
-    void Transform<D>::rotateLocal(Degree<float> degree, TransformData<D>::VecType direction) noexcept
+    void Transform<D>::rotateLocal(Degree<float> degree, Transform<D>::VecType direction) noexcept
     {
         this->rotateLocal(toRadian(degree), direction);
     }
 
     template<Dimension D>
-    void Transform<D>::rotateLocal(Radian<float> radian, TransformData<D>::VecType direction) noexcept
+    void Transform<D>::rotateLocal(Radian<float> radian, Transform<D>::VecType direction) noexcept
     {
         if (isZero(direction.length()))
             return;
@@ -260,16 +256,17 @@ namespace ikk
         direction.normalize();
         this->m_localRotation = this->m_localRotation * Quaternionf{radian, direction};
         this->m_localRotation.normalize();
+        this->m_dirty = true;
     }
 
     template<Dimension D>
-    void Transform<D>::rotateGlobal(Degree<float> degree, TransformData<D>::VecType axes) noexcept
+    void Transform<D>::rotateGlobal(Degree<float> degree, Transform<D>::VecType axes) noexcept
     {
         this->rotateGlobal(toRadian(degree), axes);
     }
 
     template<Dimension D>
-    void Transform<D>::rotateGlobal(Radian<float> radian, TransformData<D>::VecType axes) noexcept
+    void Transform<D>::rotateGlobal(Radian<float> radian, Transform<D>::VecType axes) noexcept
     {
         if (isZero(axes.length()))
             return;
@@ -277,84 +274,62 @@ namespace ikk
         axes.normalize();
         this->m_localRotation = Quaternionf{radian, axes} * this->m_localRotation;
         this->m_localRotation.normalize();
+        this->m_dirty = true;
     }
 
     template<Dimension D>
-    void Transform<D>::setLocalScale(TransformData<D>::ScaleType scale) noexcept
+    void Transform<D>::setLocalScale(Transform<D>::ScaleType scale) noexcept
     {
         this->m_localScale = scale;
+        this->m_dirty = true;
     }
 
     template<Dimension D>
-    void Transform<D>::setWorldScale(TransformData<D>::ScaleType scale) noexcept
+    void Transform<D>::setWorldScale(Transform<D>::ScaleType scale) noexcept
     {
-        if (this->m_parent != nullptr && isZero(this->m_parent->getWorldScale().length()) == false)
-            this->m_localScale = scale / this->m_parent->getWorldScale();
+        if (this->getParent() != nullptr && isZero(this->getParent()->getWorldScale().length()) == false)
+            this->m_localScale = scale / this->getParent()->getWorldScale();
         else
             this->m_localScale = scale;
+        this->m_dirty = true;
     }
 
     template<Dimension D>
-    const Transform<D>* Transform<D>::getParent() const noexcept
+    void Transform<D>::recalculateMatricies() const noexcept
     {
-        return this->m_parent;
-    }
+        Transform<D>::MatType translation = Transform<D>::MatType::Identity();
+        Transform<D>::MatType rotation = Transform<D>::MatType::Identity();
+        Transform<D>::MatType scale = Transform<D>::MatType::Identity();
 
-    template<Dimension D>
-    Transform<D>* Transform<D>::getParent() noexcept
-    {
-        return this->m_parent;
-    }
-
-    template<Dimension D>
-    const std::vector<Transform<D>*>& Transform<D>::getChildren() const noexcept
-    {
-        return this->m_children;
-    }
-
-    template<Dimension D>
-    std::vector<Transform<D>*>& Transform<D>::getChildren() noexcept
-    {
-        return this->m_children;
-    }
-
-    template<Dimension D>
-    void Transform<D>::setParent(Transform& parent) noexcept
-    {
-        if (this->m_parent == &parent)
-            return;
-
-        if (this->m_parent != nullptr)
-            std::erase(this->m_parent->m_children, this);
-
-        this->m_parent = &parent;
-
-        if (std::ranges::find(parent.m_children, this) == parent.m_children.end())
-            parent.m_children.emplace_back(this);
-    }
-
-    template<Dimension D>
-    void Transform<D>::addChild(Transform& child) noexcept
-    {
-        if (std::ranges::find(this->m_children, &child) == this->m_children.end())
+        if constexpr (D == Dimension::_2D)
         {
-            this->m_children.emplace_back(&child);
-            child.m_parent = this;
-        }
-    }
+            translation.setColumn(2, Vec3f{ this->m_localPosition.x(), this->m_localPosition.y(), 1.f });
 
-    template<Dimension D>
-    void Transform<D>::removeChild(Transform& child) noexcept
-    {
-        if (auto it = std::ranges::find(this->m_children, &child); it != this->m_children.end())
+            rotation = this->m_localRotation.toMat3x3();
+
+            scale.at(0, 0) = this->m_localScale.x();
+            scale.at(1, 1) = this->m_localScale.y();
+        }
+        else
         {
-            (*it)->m_parent = nullptr;
-            this->m_children.erase(it);
-        }
-    }
+            translation.setColumn(3, Vec4f{ this->m_localPosition.x(), this->m_localPosition.y(), this->m_localPosition.z(), 1.f });
 
-    using Transform2D = Transform<Dimension::_2D>;
-    using Transform3D = Transform<Dimension::_3D>;
+            rotation = this->m_localRotation.toMat4x4();
+
+            scale.at(0, 0) = this->m_localScale.x();
+            scale.at(1, 1) = this->m_localScale.y();
+            scale.at(2, 2) = this->m_localScale.z();
+        }
+
+        this->m_localMatrix = translation * rotation * scale;
+
+        if (this->getParent() != nullptr)
+            this->m_worldMatrix = this->getParent()->getWorldMatrix() * this->m_localMatrix;
+        else
+            this->m_worldMatrix = this->m_localMatrix;
+
+        this->m_dirty = false;
+    }
 }
 
 #endif

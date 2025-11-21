@@ -33,6 +33,7 @@ namespace ikk
         [[nodiscard]] constexpr Quaternion operator-(const Quaternion& other) const noexcept;
         [[nodiscard]] constexpr Quaternion operator*(const Quaternion& other) const noexcept;
 
+        [[nodiscard]] constexpr Vec3<T> operator*(Vec2<T> vec) const noexcept;
         [[nodiscard]] constexpr Vec3<T> operator*(Vec3<T> vec) const noexcept;
 
         [[nodiscard]] constexpr Quaternion operator*(T scale) const noexcept;
@@ -44,6 +45,7 @@ namespace ikk
         constexpr void operator-=(const Quaternion& other) noexcept;
         constexpr void operator*=(const Quaternion& other) noexcept;
 
+        constexpr void operator*=(Vec2<T> vec) noexcept;
         constexpr void operator*=(Vec3<T> vec) noexcept;
 
         constexpr void operator*=(T scale) noexcept;
@@ -220,6 +222,15 @@ namespace ikk
     }
 
     template<std::floating_point T>
+    constexpr Vec3<T> Quaternion<T>::operator*(Vec2<T> vec) const noexcept
+    {
+        const Quaternion<T> qVec{ vec.x(), vec.y(), T{0}, T{0} };
+        const Quaternion<T> qConj = this->getConjugate();
+        const Quaternion<T> rotated = (*this) * qVec * qConj;
+        return Vec3<T>{ rotated.x, rotated.y, rotated.z };
+    }
+
+    template<std::floating_point T>
     constexpr Vec3<T> Quaternion<T>::operator*(Vec3<T> vec) const noexcept
     {
         const Quaternion<T> qVec{ vec, T{0} };
@@ -280,6 +291,12 @@ namespace ikk
     constexpr void Quaternion<T>::operator*=(const Quaternion<T>& other) noexcept
     {
         *this = *this * other;
+    }
+
+    template<std::floating_point T>
+    constexpr void Quaternion<T>::operator*=(Vec2<T> vec) noexcept
+    {
+        *this = *this * vec;
     }
 
     template<std::floating_point T>

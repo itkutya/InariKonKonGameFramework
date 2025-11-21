@@ -14,11 +14,11 @@ public:
         : ikk::Application(u8"Title", ikk::Renderer::Type::OpenGL), button(this->getWindow())
     {
         drawable.addComponent(ikk::Drawable{ model, vertex, fragment, camera });
-        ikk::Transform3D transform{{},ikk::RotationDegf{}};
+        ikk::Transform3D transform{};
         drawable.addComponent(std::move(transform));
 
         drawable2.addComponent(ikk::Drawable{ model, vertex, fragment, camera });
-        ikk::Transform3D transform2{{},ikk::RotationDegf{}};
+        ikk::Transform3D transform2{};
         transform2.translateGlobal({1.f, 0.f, 0.f});
         drawable2.addComponent(std::move(transform2));
 
