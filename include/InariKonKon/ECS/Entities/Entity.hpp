@@ -11,19 +11,19 @@ namespace ikk
     class [[nodiscard]] Entity
     {
     public:
-        using IDType = std::uint64_t;
+        using IDType = std::uint32_t;
 
-        [[nodiscard]] Entity(IDType id = getNextEntityID()) noexcept;
+        [[nodiscard]] Entity() noexcept;
 
-        Entity(const Entity&) noexcept = default;
-        Entity(Entity&&) noexcept = default;
+        Entity(const Entity& other) noexcept;
+        Entity(Entity&& other) noexcept;
 
-        Entity& operator=(const Entity&) noexcept = default;
-        Entity& operator=(Entity&&) noexcept = default;
+        Entity& operator=(const Entity& other) noexcept;
+        Entity& operator=(Entity&& other) noexcept;
 
         virtual ~Entity() noexcept = default;
 
-        virtual const IDType& getID() const noexcept final;
+        [[nodiscard]] virtual const IDType& getID() const noexcept final;
 
         template<ComponentConcept Component>
         void addComponent(Component&& component) const noexcept;
@@ -40,9 +40,7 @@ namespace ikk
         template<class System, class... Args> requires SystemConcept<System, Args...>
         void applySystem(Args&&... args) const noexcept;
     private:
-        IDType m_id;
-
-        static const IDType getNextEntityID() noexcept;
+        IDType m_id = 0;
     };
 
     template<ComponentConcept Component>

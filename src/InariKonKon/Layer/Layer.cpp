@@ -1,24 +1,19 @@
 #include "InariKonKon/Layer/Layer.hpp"
 
 #include "InariKonKon/Application/Application.hpp"
+#include "InariKonKon/Utility/IDGenerator.hpp"
 #include "InariKonKon/Utility/Log.hpp"
 
 namespace ikk
 {
-    static Layer::ID getNextAvailableLayerID() noexcept
-    {
-        static Layer::ID s_nextID = 0;
-        return ++s_nextID;
-    }
-
     Layer::Layer() noexcept
-        : m_id(getNextAvailableLayerID())
+        : m_id(getNextAvailableIDfor<Layer>())
     {
         DEBUG_LOG("Layer created:\n\t{}", *this);
     }
 
     Layer::Layer(const Layer& other) noexcept
-        : m_id(getNextAvailableLayerID())
+        : m_id(getNextAvailableIDfor<Layer>())
     {
         this->attach(*other.m_app);
     }
@@ -37,7 +32,7 @@ namespace ikk
     {
         if (this != &other)
         {
-            this->m_id = getNextAvailableLayerID();
+            this->m_id = getNextAvailableIDfor<Layer>();
             this->attach(*other.m_app);
         }
         return *this;
@@ -86,7 +81,7 @@ namespace ikk
         DEBUG_LOG("Layer detached:\n\t{}", *this);
     }
 
-    const Layer::ID& Layer::getID() const noexcept
+    const Layer::IDType& Layer::getID() const noexcept
     {
         return this->m_id;
     }

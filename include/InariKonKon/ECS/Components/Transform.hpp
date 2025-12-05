@@ -46,7 +46,7 @@ namespace ikk
 
         [[nodiscard]] Transform() noexcept = default;
         [[nodiscard]] Transform(PositionType position, RotationDegf rotation, ScaleType scale = ScaleType(1.f)) noexcept;
-        [[nodiscard]] Transform(PositionType position, RotationRadf rotation, ScaleType scale = ScaleType(1.f)) noexcept;
+        [[nodiscard]] Transform(PositionType position, RotationRadf rotation = {}, ScaleType scale = ScaleType(1.f)) noexcept;
 
         Transform(const Transform&) noexcept = default;
         Transform(Transform&&) noexcept = default;

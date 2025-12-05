@@ -1,16 +1,14 @@
 #include "InariKonKon/UI/Button.hpp"
 
-//#include "InariKonKon/ECS/Components/Transform.hpp"
 //#include "InariKonKon/ECS/Components/Drawable.hpp"
 
 namespace ikk
 {
-    Button::Button(const Window& window) noexcept
+    Button::Button(Vec2f position, Vec2f size, RotationDegf rotation, Color color, float radius) noexcept
+        : UI(position, size, rotation)
     {
-        //this->addComponent(UI{}); --> This should hold all of the below ones...
-        //this->addComponent(Transform2D{});
+        //Model is a rectangle, shader is a basic UI shader, camera is an orthographic camera
         //this->addComponent(Drawable{});
-        //this->addComponent(UserInput{});
     }
 
     const Button::State& Button::getState() const noexcept

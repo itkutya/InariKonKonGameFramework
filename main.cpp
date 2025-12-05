@@ -1,8 +1,14 @@
 #include "InariKonKon/InariKonKon.hpp"
 
+#include "InariKonKon/UI/Button.hpp"
+
 class MainMenu final : public ikk::Layer
 {
 public:
+    MainMenu() noexcept
+    {
+    }
+
     void onEvent(const ikk::Event& event) noexcept override
     {
     }
@@ -13,7 +19,10 @@ public:
 
     void onRender(const ikk::Window& window) const noexcept override
     {
+        window.draw(button);
     }
+
+    ikk::Button button{ikk::Vec2f{ 100.0f, 100.0f }};
 };
 
 int main()

@@ -15,7 +15,7 @@ namespace ikk
     class Layer
     {
     public:
-        using ID = std::uint32_t;
+        using IDType = std::uint32_t;
 
         Layer() noexcept;
 
@@ -34,9 +34,9 @@ namespace ikk
         virtual void onUpdate(const Time& dt) noexcept = 0;
         virtual void onRender(const Window& window) const noexcept = 0;
 
-        virtual const ID& getID() const noexcept final;
+        virtual const IDType& getID() const noexcept final;
     private:
-        ID m_id = 0;
+        IDType m_id = 0;
         Application* m_app = nullptr;
     };
 

@@ -1,13 +1,14 @@
 #ifndef IKK_BUTTON_HPP
 #define IKK_BUTTON_HPP
 
-#include "InariKonKon/ECS/Entities/Entity.hpp"
+#include "InariKonKon/Utility/Color.hpp"
+#include "InariKonKon/UI/UI.hpp"
 
 namespace ikk
 {
     class Window;
 
-    class [[nodiscard]] Button final : public Entity
+    class [[nodiscard]] Button final : public UI
     {
     public:
         enum struct State : std::uint8_t
@@ -15,7 +16,7 @@ namespace ikk
             Pressed, Held, None
         };
 
-        [[nodiscard]] Button(const Window& window) noexcept;
+        [[nodiscard]] Button(Vec2f position = {}, Vec2f size = { 1, 1 }, RotationDegf rotation = {}, Color color = Color::White, float radius = 0.0f) noexcept;
 
         Button(const Button&) noexcept = default;
         Button(Button&&) noexcept = default;
