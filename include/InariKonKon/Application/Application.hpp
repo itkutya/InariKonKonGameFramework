@@ -1,27 +1,15 @@
 #ifndef IKK_APPLICATION_HPP
 #define IKK_APPLICATION_HPP
 
-#include <string_view>
-
 #include "InariKonKon/Window/Window.hpp"
 #include "InariKonKon/Utility/Clock.hpp"
+#include "InariKonKon/Layer/Layer.hpp"
 
 namespace ikk
 {
-    class Application
+    class Application final
     {
     public:
-        virtual ~Application() noexcept = default;
-
-        virtual void onEvent(const Event& event) noexcept = 0;
-        virtual void onUpdate(const Time& dt) noexcept = 0;
-        virtual void onRender(const Window& window) const noexcept = 0;
-
-        virtual void run() noexcept final;
-
-        [[nodiscard]] virtual const Window& getWindow() const noexcept final;
-        [[nodiscard]] virtual Window& getWindow() noexcept final;
-    protected:
         Application(std::u8string_view title, Renderer::Type renderer) noexcept;
 
         Application(const Application&) noexcept = default;
@@ -29,14 +17,23 @@ namespace ikk
 
         Application& operator=(const Application&) noexcept = default;
         Application& operator=(Application&&) noexcept = default;
+
+        ~Application() noexcept = default;
+
+        void run() noexcept;
+
+        [[nodiscard]] const Window& getWindow() const noexcept;
+        [[nodiscard]] Window& getWindow() noexcept;
     private:
         Window m_window;
-        
         Clock m_deltaTime = {};
+        std::vector<Layer*> m_layers{};
 
         void handleEvents();
         void update();
         void render() const;
+
+        friend Layer;
     };
 }
 
@@ -51,7 +48,7 @@ public:
 
     constexpr auto format(const ikk::Application& application, std::format_context& ctx) const noexcept
     {
-        return std::format_to(ctx.out(), "ptr: {}", reinterpret_cast<std::uintptr_t>(&application));
+        return std::format_to(ctx.out(), "ptr: {:#x}", reinterpret_cast<std::uintptr_t>(&application));
     }
 };
 

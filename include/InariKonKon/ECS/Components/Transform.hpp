@@ -90,11 +90,6 @@ namespace ikk
         RotationType m_localRotation = RotationType();
         ScaleType m_localScale = ScaleType(1.f);
 
-        //TODO:
-        PositionType m_targetPosition = PositionType(0.f);
-        RotationType m_targetRotation = RotationType();
-        ScaleType m_targetScale = ScaleType(1.f);
-
         mutable bool m_dirty = true;
         mutable MatType m_localMatrix = MatType::Identity();
         mutable MatType m_worldMatrix = MatType::Identity();

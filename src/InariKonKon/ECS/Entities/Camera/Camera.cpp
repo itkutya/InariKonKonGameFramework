@@ -76,6 +76,11 @@ namespace ikk
         return view;
     }
 
+    bool Camera::getState() const noexcept
+    {
+        return this->m_enabled;
+    }
+
     void Camera::processMouseEvent(const Vec2d& mousePos) noexcept
     {
         if (this->m_enabled == false)
@@ -106,41 +111,34 @@ namespace ikk
         {
             //TODO:
             float distance = 5.f;
-            // Orbit camera around parent (target)
-            // Yaw (horizontal) = rotate around world up
+            
             transform.rotateGlobal(Degree{ offset.x() }, worldUp);
-
-            // Pitch (vertical) = rotate around local right axis
             transform.rotateLocal(Degree{ offset.y() }, {1.f, 0.f, 0.f});
 
-            // Clamp pitch to prevent flipping (optional)
             const float dotUp = transform.getForward().dot(worldUp);
-            if (dotUp > 0.98f)  // looking almost straight down
+            if (dotUp > 0.98f)
                 transform.rotateLocal(Degree{ -offset.y() }, {1.f, 0.f, 0.f});
-            else if (dotUp < -0.98f) // looking almost straight up
+            else if (dotUp < -0.98f)
                 transform.rotateLocal(Degree{ -offset.y() }, {1.f, 0.f, 0.f});
 
-            transform.getLocalRotation().normalize();
-
-            // If camera has a parent (the target entity)
             if (Transform3D* parent = transform.getParent(); parent != nullptr)
-            {
-                // Get parent's world position
-                const Vec3f targetPos = parent->getWorldPosition();
-
-                // Desired camera position = target - forward * distance
-                const Vec3f forward = transform.getForward();
-                const Vec3f desiredPos = targetPos - (forward * distance);
-
-                // Set camera position locally relative to parent
-                Mat4x4f invParent = parent->getWorldMatrix();
-                invParent.inverse();
-                const Vec4f localPos4 = invParent * Vec4f{ desiredPos.x(), desiredPos.y(), desiredPos.z(), 1.0f };
-                transform.getLocalPosition() = Vec3f{ localPos4.x(), localPos4.y(), localPos4.z() };
-            }
+                transform.translateGlobal((parent->getWorldPosition() - (transform.getForward() * distance)) - transform.getWorldPosition());
         }
             break;
         }
+    }
+
+    void Camera::processMouseEvent(double delta) noexcept
+    {
+        if (this->m_enabled == false)
+            return;
+
+        if (this->m_canZoom == false)
+            return;
+
+        //TODO:
+        //Clamp...
+        this->m_zoom -= static_cast<float>(delta) * 0.1f;
     }
 
     void Camera::enable(bool value) noexcept

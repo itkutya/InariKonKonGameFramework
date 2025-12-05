@@ -41,11 +41,15 @@ namespace ikk
         [[nodiscard]] const Mat4x4f getViewMatrix() const noexcept;
 
         void processMouseEvent(const Vec2d& mousePos) noexcept;
+        void processMouseEvent(double delta) noexcept;
 
+        bool getState() const noexcept;
         void enable(bool value = true) noexcept;
     private:
         bool m_enabled = true;
         Vec2d m_lastMousePosition{};
+
+        bool m_canZoom = true;
 
         float m_nearPlane = 0.1f;
         float m_farPlane = 100.f;

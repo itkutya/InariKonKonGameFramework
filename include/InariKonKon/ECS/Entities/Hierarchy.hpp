@@ -1,6 +1,7 @@
 #ifndef IKK_HIERACHRY_HPP
 #define IKK_HIERACHRY_HPP
 
+#include <type_traits>
 #include <vector>
 
 namespace ikk
@@ -37,6 +38,8 @@ namespace ikk
     template<class T>
     Hierarchy<T>::Hierarchy(const Hierarchy& other) noexcept
     {
+        static_assert(std::is_base_of<Hierarchy<T>, T>::value);
+
         if (this != &other)
         {
             this->m_parent = other.m_parent;
@@ -47,6 +50,8 @@ namespace ikk
     template<class T>
     Hierarchy<T>::Hierarchy(Hierarchy&& other) noexcept
     {
+        static_assert(std::is_base_of<Hierarchy<T>, T>::value);
+
         if (this != &other)
         {
             this->m_parent = other.m_parent;
@@ -59,6 +64,8 @@ namespace ikk
     template<class T>
     Hierarchy<T>& Hierarchy<T>::operator=(const Hierarchy& other) noexcept
     {
+        static_assert(std::is_base_of<Hierarchy<T>, T>::value);
+
         if (this != &other)
         {
             this->m_parent = other.m_parent;
@@ -70,6 +77,8 @@ namespace ikk
     template<class T>
     Hierarchy<T>& Hierarchy<T>::operator=(Hierarchy&& other) noexcept
     {
+        static_assert(std::is_base_of<Hierarchy<T>, T>::value);
+
         if (this != &other)
         {
             this->m_parent = other.m_parent;
@@ -83,6 +92,8 @@ namespace ikk
     template<class T>
     Hierarchy<T>::~Hierarchy() noexcept
     {
+        static_assert(std::is_base_of<Hierarchy<T>, T>::value);
+
         for (T* child : this->m_children)
             if (child != nullptr)
                 child->m_parent = nullptr;
@@ -91,30 +102,36 @@ namespace ikk
     template<class T>
     const T* Hierarchy<T>::getParent() const noexcept
     {
+        static_assert(std::is_base_of<Hierarchy<T>, T>::value);
         return this->m_parent;
     }
 
     template<class T>
     T* Hierarchy<T>::getParent() noexcept
     {
+        static_assert(std::is_base_of<Hierarchy<T>, T>::value);
         return this->m_parent;
     }
 
     template<class T>
     const std::vector<T*>& Hierarchy<T>::getChildren() const noexcept
     {
+        static_assert(std::is_base_of<Hierarchy<T>, T>::value);
         return this->m_children;
     }
 
     template<class T>
     std::vector<T*>& Hierarchy<T>::getChildren() noexcept
     {
+        static_assert(std::is_base_of<Hierarchy<T>, T>::value);
         return this->m_children;
     }
 
     template<class T>
     void Hierarchy<T>::setParent(T& parent) noexcept
     {
+        static_assert(std::is_base_of<Hierarchy<T>, T>::value);
+
         if (this->m_parent == &parent)
             return;
 
@@ -130,6 +147,8 @@ namespace ikk
     template<class T>
     void Hierarchy<T>::addChild(T& child) noexcept
     {
+        static_assert(std::is_base_of<Hierarchy<T>, T>::value);
+
         if (std::ranges::find(this->m_children, &child) == this->m_children.end())
         {
             this->m_children.emplace_back(&child);
@@ -140,6 +159,8 @@ namespace ikk
     template<class T>
     void Hierarchy<T>::removeChild(T& child) noexcept
     {
+        static_assert(std::is_base_of<Hierarchy<T>, T>::value);
+
         if (auto it = std::ranges::find(this->m_children, &child); it != this->m_children.end())
         {
             (*it)->m_parent = nullptr;

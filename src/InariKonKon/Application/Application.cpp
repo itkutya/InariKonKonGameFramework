@@ -1,6 +1,7 @@
 #include "InariKonKon/Application/Application.hpp"
 
-#include "InariKonKon/ECS/Systems/Transformer.hpp"
+#include <algorithm>
+
 #include "InariKonKon/Utility/Log.hpp"
 
 namespace ikk
@@ -40,20 +41,37 @@ namespace ikk
     {
         this->m_window.pollEvents();
         for (std::stack<Event>& eventStack = this->m_window.m_eventStack; eventStack.empty() == false; eventStack.pop())
-            this->onEvent(eventStack.top());
+        {
+            const Event& event = eventStack.top();
+            //TODO:
+            //Multi-threading?
+            std::for_each(this->m_layers.rbegin(), this->m_layers.rend(),
+                [&event](Layer* layer) noexcept
+                {
+                    layer->onEvent(event);
+                });
+        }
     }
     
     void Application::update()
     {
         const Time dt = this->m_deltaTime.restart();
-        this->onUpdate(dt);
-        ECS::update<Transformer>(dt);
+        std::for_each(this->m_layers.rbegin(), this->m_layers.rend(),
+            [&dt](Layer* layer) noexcept
+            {
+                layer->onUpdate(dt);
+            });
     }
 
     void Application::render() const
     {
         this->m_window.beginRender();
-        this->onRender(this->m_window);
+        const Window& window = this->m_window;
+        std::for_each(this->m_layers.rbegin(), this->m_layers.rend(),
+            [&window](const Layer* layer) noexcept
+            {
+                layer->onRender(window);
+            });
         this->m_window.endRender();
     }
 }
