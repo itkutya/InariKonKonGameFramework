@@ -12,7 +12,13 @@ namespace ikk
         if (component.isActive() == false)
             return;
 
-        const std::expected<Transform3D*, Error> transform = entity.getComponent<Transform3D>(); 
+        union TramsformTypes
+        {
+            Transform2D* transform2D;
+            Transform3D* transform3D = nullptr;
+        };
+
+        const std::expected<Transform3D*, Error> transform = entity.getComponent<Transform3D>();
         if (transform.has_value() == false)
         {
             DEBUG_LOG(Log::Level::Warning, "Transform component not found for drawable entity.");

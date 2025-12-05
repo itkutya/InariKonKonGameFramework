@@ -47,6 +47,9 @@ namespace ikk
         const std::vector<Vertex>& vertices = model->m_vertices;
         const std::vector<std::uint32_t>& indices = model->m_indices;
 
+        if (vertices.empty() == true)
+            return;
+
         //TODO:
         //Make this generic...
         glGenVertexArrays(1, &temp.VAO);

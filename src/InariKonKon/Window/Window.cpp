@@ -129,7 +129,6 @@ namespace ikk
     void Window::endRender() const noexcept
     {
         ECS::update<Drawer>(*this);
-        //Draw UI
         this->m_renderer->endFrame(*this);
     }
 

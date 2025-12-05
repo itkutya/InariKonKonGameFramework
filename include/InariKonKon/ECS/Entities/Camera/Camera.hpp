@@ -11,7 +11,7 @@ namespace ikk
     public:
         enum struct Type : std::uint8_t
         {
-            FirstPerson, ThirdPerson
+            None, FirstPerson, ThirdPerson
         };
 
         enum struct Projection : std::uint8_t
@@ -19,7 +19,7 @@ namespace ikk
             Perspective, Orthografic
         };
 
-        [[nodiscard]] Camera(Type type, Vec3f position = {}, float pitch = 0.f, float yaw = 0.f, float nearPlane = 0.1f, float farPlane = 100.f) noexcept;
+        [[nodiscard]] Camera(Type type = Type::None, Vec3f position = {}, float pitch = 0.f, float yaw = 0.f, float nearPlane = 0.1f, float farPlane = 100.f) noexcept;
 
         Camera(const Camera& other) noexcept;
         Camera(Camera&& other) noexcept;

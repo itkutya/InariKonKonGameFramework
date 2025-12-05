@@ -125,6 +125,8 @@ namespace ikk
                 transform.translateGlobal((parent->getWorldPosition() - (transform.getForward() * distance)) - transform.getWorldPosition());
         }
             break;
+        case Type::None:
+            break;
         }
     }
 

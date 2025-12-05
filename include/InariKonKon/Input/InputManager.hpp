@@ -21,7 +21,6 @@ namespace ikk
 {
     class InputManager final : public Singleton<InputManager>
     {
-        InputManager() noexcept = default;
     public:
         ~InputManager() noexcept = default;
 
