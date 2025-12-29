@@ -209,7 +209,7 @@ namespace ikk
     template<Dimension D>
     void Transform<D>::translateLocal(Transform<D>::PositionType position) noexcept
     {
-        this->m_localPosition += this->m_localRotation * position;
+        this->m_localPosition += (this->m_localRotation * position);
         this->m_dirty = true;
     }
 
