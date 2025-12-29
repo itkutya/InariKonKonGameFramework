@@ -6,7 +6,7 @@ namespace ikk
 {
     UI::UI(Vec2f position, Vec2f size, RotationDegf rotation) noexcept
     {
-        Transform2D transform{ position, rotation, size };
+        Transform2D transform{ -position, rotation, size / 2.f };
         this->addComponent(std::move(transform));
     }
 

@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <cstddef>
 
-#include "InariKonKon/ExternalLibraries/GLFW.hpp" // IWYU pragma: keep
+#include "InariKonKon/Core/ExternalLibraries/GLFW.hpp" // IWYU pragma: keep
 #include "InariKonKon/Utility/Log.hpp"
 
 namespace ikk

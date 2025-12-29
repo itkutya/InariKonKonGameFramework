@@ -2,8 +2,8 @@
 
 namespace ikk
 {
-    Drawable::Drawable(Model& model, Shader& vertex, Shader& fragment, Camera& camera) noexcept
-        : m_model(&model), m_vertex(&vertex), m_fragment(&fragment), m_camera(&camera)
+    Drawable::Drawable(Type type, Model& model, ShaderProgram& shaderProgram, Camera& camera) noexcept
+        : m_type(type), m_model(&model), m_shaderProgram(&shaderProgram), m_camera(&camera)
     {
     }
 
@@ -17,19 +17,34 @@ namespace ikk
         return !this->m_disabled;
     }
 
+    const Drawable::Type& Drawable::getType() const noexcept
+    {
+        return this->m_type;
+    }
+
+    Model* Drawable::getModel() noexcept
+    {
+        return this->m_model;
+    }
+
+    ShaderProgram* Drawable::getShaderProgram() noexcept
+    {
+        return this->m_shaderProgram;
+    }
+
+    Camera* Drawable::getCamera() noexcept
+    {
+        return this->m_camera;
+    }
+
     const Model* Drawable::getModel() const noexcept
     {
         return this->m_model;
     }
 
-    const Shader* Drawable::getVertexShader() const noexcept
+    const ShaderProgram* Drawable::getShaderProgram() const noexcept
     {
-        return this->m_vertex;
-    }
-
-    const Shader* Drawable::getFragmentShader() const noexcept
-    {
-        return this->m_fragment;
+        return this->m_shaderProgram;
     }
 
     const Camera* Drawable::getCamera() const noexcept

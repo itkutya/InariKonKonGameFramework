@@ -2,10 +2,10 @@
 
 #include <ranges> // IWYU pragma: keep
 
-#include "InariKonKon/ExternalLibraries/GLFW.hpp" // IWYU pragma: keep
-#include "InariKonKon/Input/Joystick.hpp"
+#include "InariKonKon/Core/ExternalLibraries/GLFW.hpp" // IWYU pragma: keep
+#include "InariKonKon/Core/Window/Window.hpp"
 #include "InariKonKon/Input/PhysicalJoystick.hpp"
-#include "InariKonKon/Window/Window.hpp"
+#include "InariKonKon/Input/Joystick.hpp"
 
 namespace ikk
 {

@@ -1,7 +1,7 @@
 #include "InariKonKon/Input/Mouse.hpp"
 
-#include "InariKonKon/ExternalLibraries/GLFW.hpp" // IWYU pragma: keep
-#include "InariKonKon/Window/Window.hpp"
+#include "InariKonKon/Core/ExternalLibraries/GLFW.hpp" // IWYU pragma: keep
+#include "InariKonKon/Core/Window/Window.hpp"
 
 namespace ikk
 {

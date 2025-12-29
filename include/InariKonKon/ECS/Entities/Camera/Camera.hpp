@@ -3,6 +3,7 @@
 
 #include "InariKonKon/ECS/Components/Transform.hpp"
 #include "InariKonKon/ECS/Entities/Entity.hpp"
+#include "InariKonKon/Math/Rect.hpp"
 
 namespace ikk
 {
@@ -36,7 +37,7 @@ namespace ikk
         [[nodiscard]] const Mat4x4f getProjectionMatrix(float aspect) const noexcept;
 
         template<Projection P = Projection::Orthografic> requires (P == Camera::Projection::Orthografic)
-        [[nodiscard]] const Mat4x4f getProjectionMatrix(float left, float right, float bottom, float top) const noexcept;
+        [[nodiscard]] const Mat4x4f getProjectionMatrix(Rectf rect) const noexcept;
 
         [[nodiscard]] const Mat4x4f getViewMatrix() const noexcept;
 
@@ -82,8 +83,13 @@ namespace ikk
     }
 
     template<Camera::Projection P> requires (P == Camera::Projection::Orthografic)
-    const Mat4x4f Camera::getProjectionMatrix(float left, float right, float bottom, float top) const noexcept
+    const Mat4x4f Camera::getProjectionMatrix(Rectf rect) const noexcept
     {
+        const float left = rect.left;
+        const float right = rect.left + rect.width;
+        const float top = rect.top;
+        const float bottom = rect.top + rect.height;
+
         if (right == left || top == bottom || this->m_farPlane == this->m_nearPlane)
             return Mat4x4f::Identity();
 

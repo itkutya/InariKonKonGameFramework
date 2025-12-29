@@ -1,6 +1,6 @@
 #include "InariKonKon/InariKonKon.hpp"
 
-#include "InariKonKon/UI/Button.hpp"
+#include "InariKonKon/UI/Widgets/Button.hpp"
 
 class MainMenu final : public ikk::Layer
 {
@@ -22,7 +22,7 @@ public:
         window.draw(button);
     }
 
-    ikk::Button button{ikk::Vec2f{ 100.0f, 100.0f }};
+    ikk::Button button{ikk::Vec2f{ 230.f, 250.f }, ikk::Vec2f{ 100.f, 100.f }, {}, ikk::Color::Blue};
 };
 
 int main()

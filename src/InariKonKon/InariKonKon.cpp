@@ -1,6 +1,6 @@
 #include "InariKonKon/InariKonKon.hpp"
 
-#include "InariKonKon/ExternalLibraries/ExternalLibraries.hpp"
+#include "InariKonKon/Core/ExternalLibraries/ExternalLibraries.hpp"
 
 namespace ikk
 {

@@ -1,6 +1,6 @@
 #include "InariKonKon/Input/PhysicalJoystick.hpp"
 
-#include "InariKonKon/ExternalLibraries/GLFW.hpp" // IWYU pragma: keep
+#include "InariKonKon/Core/ExternalLibraries/GLFW.hpp" // IWYU pragma: keep
 #include "InariKonKon/Utility/Utility.hpp"
 
 namespace ikk
