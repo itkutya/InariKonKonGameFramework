@@ -9,7 +9,7 @@ namespace ikk
     {
         this->addComponent(UIManager::getInstance().createDefaultDrawableObject());
 
-        for (Vertex& vertex : this->getComponent<Drawable>().value()->getModel()->m_vertices)
+        for (UIVertex& vertex : this->getComponent<Drawable>().value()->getModel().getVertexBuffer<UIVertex>())
             vertex.color = color;
     }
 

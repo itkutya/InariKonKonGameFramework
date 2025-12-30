@@ -120,11 +120,9 @@ namespace ikk
     {
         if (const std::expected<Drawable*, Error>& drawable = entity.getComponent<Drawable>(); drawable.has_value() == true)
         {
-            this->m_renderer->registerEntity(entity, *drawable.value());
+            this->m_renderer->registerEntity(entity);
             drawable.value()->setActive();
         }
-        else
-            DEBUG_LOG(Log::Level::Warning, "Drawable component not found for entity.");
     }
 
     bool Window::shouldClose() const noexcept

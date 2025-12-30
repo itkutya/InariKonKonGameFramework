@@ -2,8 +2,8 @@
 
 namespace ikk
 {
-    Drawable::Drawable(Type type, Model& model, ShaderProgram& shaderProgram, Camera& camera) noexcept
-        : m_type(type), m_model(&model), m_shaderProgram(&shaderProgram), m_camera(&camera)
+    Drawable::Drawable(Model& model, ShaderProgram& shaderProgram, Camera& camera) noexcept
+        : m_model(&model), m_shaderProgram(&shaderProgram), m_camera(&camera)
     {
     }
 
@@ -17,38 +17,33 @@ namespace ikk
         return !this->m_disabled;
     }
 
-    const Drawable::Type& Drawable::getType() const noexcept
+    Model& Drawable::getModel() noexcept
     {
-        return this->m_type;
+        return *this->m_model;
     }
 
-    Model* Drawable::getModel() noexcept
+    ShaderProgram& Drawable::getShaderProgram() noexcept
     {
-        return this->m_model;
+        return *this->m_shaderProgram;
     }
 
-    ShaderProgram* Drawable::getShaderProgram() noexcept
+    Camera& Drawable::getCamera() noexcept
     {
-        return this->m_shaderProgram;
+        return *this->m_camera;
     }
 
-    Camera* Drawable::getCamera() noexcept
+    const Model& Drawable::getModel() const noexcept
     {
-        return this->m_camera;
+        return *this->m_model;
     }
 
-    const Model* Drawable::getModel() const noexcept
+    const ShaderProgram& Drawable::getShaderProgram() const noexcept
     {
-        return this->m_model;
+        return *this->m_shaderProgram;
     }
 
-    const ShaderProgram* Drawable::getShaderProgram() const noexcept
+    const Camera& Drawable::getCamera() const noexcept
     {
-        return this->m_shaderProgram;
-    }
-
-    const Camera* Drawable::getCamera() const noexcept
-    {
-        return this->m_camera;
+        return *this->m_camera;
     }
 }

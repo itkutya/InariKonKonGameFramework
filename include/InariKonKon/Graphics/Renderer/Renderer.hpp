@@ -1,8 +1,9 @@
 #ifndef IKK_RENDERER_HPP
 #define IKK_RENDERER_HPP
 
-#include "InariKonKon/ECS/Components/Drawable.hpp"
 #include "InariKonKon/ECS/Entities/Entity.hpp"
+#include "InariKonKon/Utility/Color.hpp"
+#include "InariKonKon/Math/Vec.hpp"
 
 namespace ikk
 {
@@ -28,7 +29,7 @@ namespace ikk
 
         virtual void createContext(const Window& window) const noexcept = 0;
 
-        virtual void registerEntity(const Entity& entity, const Drawable& drawable) noexcept = 0;
+        virtual void registerEntity(const Entity& entity) noexcept = 0;
 
         virtual void onWindowResize(Vec2u newSize) const noexcept = 0;
         virtual void onFramebufferResize(Vec2u newSize) const noexcept = 0;
@@ -36,7 +37,7 @@ namespace ikk
         virtual void newFrame(const Color& color) const noexcept = 0;
         virtual void endFrame(const Window& window) const noexcept = 0;
 
-        virtual void draw(const Entity& entity, const Drawable& drawable) const noexcept = 0;
+        virtual void draw(const Entity& entity) const noexcept = 0;
 
         [[nodiscard]] static constexpr std::string_view convertToString(Type type) noexcept;
     private:

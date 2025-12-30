@@ -30,12 +30,12 @@ namespace ikk
 
         void createContext(const Window& window) const noexcept override;
 
-        void registerEntity(const Entity& entity, const Drawable& drawable) noexcept override;
+        void registerEntity(const Entity& entity) noexcept override;
 
         void onWindowResize(Vec2u newSize) const noexcept override;
         void onFramebufferResize(Vec2u newSize) const noexcept override;
 
-        void draw(const Entity& entity, const Drawable& drawable) const noexcept override;
+        void draw(const Entity& entity) const noexcept override;
 
         void newFrame(const Color& color) const noexcept override;
         void endFrame(const Window& window) const noexcept override;

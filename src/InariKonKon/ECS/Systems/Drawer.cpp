@@ -16,17 +16,17 @@ namespace ikk
             return;
         }
 
-        const ShaderProgram* shader = component.getShaderProgram();
+        const ShaderProgram& shader = component.getShaderProgram();
 
         if (entity.hasComponent<Transform3D>() == true)
         {
             const Transform3D* transform = entity.getComponent<Transform3D>().value();
-            shader->setUniform("model", transform->getWorldMatrix());
+            shader.setUniform("model", transform->getWorldMatrix());
         }
         else if (entity.hasComponent<Transform2D>() == true)
         {
             const Transform2D* transform = entity.getComponent<Transform2D>().value();
-            shader->setUniform("model", transform->getWorldMatrix());
+            shader.setUniform("model", transform->getWorldMatrix());
         }
         else
         {
@@ -34,10 +34,8 @@ namespace ikk
             return;
         }
 
-        const Camera* camera = component.getCamera();
-
-        //TODO:
-        //This should be handeld by ubo...
+        const Camera& camera = component.getCamera();
+        /* TODO: UBO!!!
         switch (component.getType() )
         {
         case Drawable::Type::Object:
@@ -47,7 +45,7 @@ namespace ikk
         case Drawable::Type::UI:
             break;
         }
-
-        window.getRenderer()->draw(entity, component);
+        */
+        window.getRenderer()->draw(entity);
     }
 }

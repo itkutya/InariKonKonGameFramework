@@ -6,12 +6,24 @@
 
 namespace ikk
 {
-    struct Vertex final
+    template<typename T, typename... Ts>
+    struct HasAttribute : std::disjunction<std::is_same<T, Ts>...> {};
+
+    struct Empty{};
+
+    //TODO:
+    //Constrain types...
+    template<class VecType, class... Attributes>
+    struct [[nodiscard]] VertexBase
     {
-        Vec3f position = {};
-        Color color = Color::White;
-        Vec2f texCoord = {};
+        VecType position{};
+
+        [[no_unique_address]] std::conditional_t<HasAttribute<Color, Attributes...>::value, Color, Empty> color{};
+        [[no_unique_address]] std::conditional_t<HasAttribute<Vec2f, Attributes...>::value, Vec2f, Empty> texCoord{};
     };
+
+    using UIVertex = VertexBase<Vec2f, Color>;
+    using Vertex = VertexBase<Vec3f, Color>;
 }
 
 #endif

@@ -1,14 +1,13 @@
 #include "InariKonKon/UI/UIManager.hpp"
 
-#include "InariKonKon/Assets/Shader/ShaderProgram.hpp"
-#include "InariKonKon/Core/Window/Window.hpp"
-#include "InariKonKon/Math/Mat.hpp"
-
 #include "InariKonKon/Core/ExternalLibraries/OpenGL.hpp" // IWYU pragma: keep
-#include "InariKonKon/Math/Math.hpp"
+#include "InariKonKon/ECS/Components/Drawable.hpp"
+#include "InariKonKon/Core/Window/Window.hpp"
 
 namespace ikk
 {
+    //TODO:
+    //No OpenGL calls in UIManager...
     UIManager::UIManager() noexcept
     {
         glGenBuffers(1, &this->m_ubo);
@@ -40,7 +39,6 @@ namespace ikk
     {
         static Drawable drawable
         {
-            Drawable::Type::UI,
             this->m_defaultUIModel,
             this->m_defaultUIShader,
             this->m_defaultUICamera
@@ -52,7 +50,7 @@ namespace ikk
     {
         glBindBuffer(GL_UNIFORM_BUFFER, this->m_ubo);
         glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Mat4x4f),
-            &(this->m_defaultUICamera.getProjectionMatrix(window.getViewport()).convertTo<MatrixOrdering::ColumnMajor>().at(0, 0))); 
+            &(this->m_defaultUICamera.getProjectionMatrix(window.getViewport()).convertTo<MatrixOrdering::ColumnMajor>().at(0, 0)));
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
     }
 }

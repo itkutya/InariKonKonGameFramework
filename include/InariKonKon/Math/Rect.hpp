@@ -5,6 +5,9 @@
 
 namespace ikk
 {
+    //TODO:
+    //Add inside & other functions...
+
     template<Number T>
     struct Rect
     {
