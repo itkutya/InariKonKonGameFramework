@@ -117,12 +117,7 @@ namespace ikk
     inline constexpr Color Color::Yellow            { 0xff, 0xff, 0x00 };
     inline constexpr Color Color::Magenta           { 0xff, 0x00, 0xff };
     inline constexpr Color Color::Cyan              { 0x00, 0xff, 0xff };
-    inline constexpr Color Color::CornflowerBlue
-    {
-        Clamped<float, 0.f, 1.f>{0.392f},
-        Clamped<float, 0.f, 1.f>{0.584f},
-        Clamped<float, 0.f, 1.f>{0.929f}
-    };
+    inline constexpr Color Color::CornflowerBlue    { NormalizedFloat{0.392f}, NormalizedFloat{0.584f}, NormalizedFloat{0.929f} };
     inline constexpr Color Color::Transparent       { 0x00, 0x00, 0x00, 0x00 };
 
     inline constexpr Color Color::Miku       { 0x39, 0xC5, 0xBB };

@@ -77,6 +77,11 @@ namespace ikk
         constexpr const T convertValueFromOtherRange(T value) const noexcept;
     };
 
+    //TODO:
+    //Better names...
+    using NormalizedFloat   = Clamped<float,  0.f, 1.f>;
+    using RangeFloat        = Clamped<float, -1.f, 1.f>;
+
     template<Number T, T Min, T Max>
     constexpr Clamped<T, Min, Max>::Clamped() noexcept
         : m_value(Min)
