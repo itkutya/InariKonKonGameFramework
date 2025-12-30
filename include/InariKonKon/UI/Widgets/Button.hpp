@@ -16,7 +16,8 @@ namespace ikk
             Pressed, Held, None
         };
 
-        [[nodiscard]] Button(Vec2f position = {}, Vec2f size = { 1, 1 }, RotationDegf rotation = {}, Color color = Color::White, float radius = 0.0f) noexcept;
+        [[nodiscard]] Button(Vec2f position = {}, Vec2f size = { 1, 1 }, Degreef rotation = {}, Color color = Color::White, float radius = 0.0f) noexcept;
+        [[nodiscard]] Button(Vec2f position = {}, Vec2f size = { 1, 1 }, Radianf rotation = {}, Color color = Color::White, float radius = 0.0f) noexcept;
 
         Button(const Button&) noexcept = default;
         Button(Button&&) noexcept = default;

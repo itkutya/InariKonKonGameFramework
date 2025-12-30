@@ -4,7 +4,12 @@
 
 namespace ikk
 {
-    Button::Button(Vec2f position, Vec2f size, RotationDegf rotation, Color color, float radius) noexcept
+    Button::Button(Vec2f position, Vec2f size, Degreef rotation, Color color, float radius) noexcept
+        : Button(position, size, toRadian(rotation), color, radius)
+    {
+    }
+
+    Button::Button(Vec2f position, Vec2f size, Radianf rotation, Color color, float radius) noexcept
         : UI(position, size, rotation)
     {
         this->addComponent(UIManager::getInstance().createDefaultDrawableObject());
