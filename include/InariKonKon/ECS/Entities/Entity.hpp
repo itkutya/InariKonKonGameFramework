@@ -37,7 +37,7 @@ namespace ikk
         template<ComponentConcept Component>
         [[nodiscard]] std::expected<Component*, Error> getComponent() const noexcept;
 
-        template<class System, class... Args> requires SystemConcept<System, Args...>
+        template<class System, class... Args> requires (SystemConcept<System, Args...>)
         void applySystem(Args&&... args) const noexcept;
     private:
         IDType m_id = 0;
@@ -67,7 +67,7 @@ namespace ikk
         return ECS::getComponentOfEntity<Component>(*this);
     }
 
-    template<class System, class... Args> requires SystemConcept<System, Args...>
+    template<class System, class... Args> requires (SystemConcept<System, Args...>)
     void Entity::applySystem(Args&&... args) const noexcept
     {
         ECS::applySystemOnEntity<System>(*this, std::forward<Args>(args)...);
