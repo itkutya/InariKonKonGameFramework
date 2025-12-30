@@ -16,6 +16,8 @@ namespace ikk
         [[nodiscard]] constexpr Quaternion(RotationRad<T> eulerRadians) noexcept;
         [[nodiscard]] constexpr Quaternion(Degree<T> degree, Vec3<T> axis) noexcept;
         [[nodiscard]] constexpr Quaternion(Radian<T> radian, Vec3<T> axis) noexcept;
+        [[nodiscard]] constexpr Quaternion(Degree<T> degree, Vec2<T> axis) noexcept;
+        [[nodiscard]] constexpr Quaternion(Radian<T> radian, Vec2<T> axis) noexcept;
         [[nodiscard]] constexpr Quaternion(const Mat3x3<T>& matrix) noexcept;
         [[nodiscard]] constexpr Quaternion(const Mat4x4<T>& matrix) noexcept;
 
@@ -120,6 +122,25 @@ namespace ikk
         this->x = axis.x() * s;
         this->y = axis.y() * s;
         this->z = axis.z() * s;
+        this->w = std::cos(halfAngle);
+    }
+
+    template<std::floating_point T>
+    constexpr Quaternion<T>::Quaternion(Degree<T> degree, Vec2<T> axis) noexcept
+        : Quaternion<T>{toRadian(degree), axis}
+    {
+    }
+
+    template<std::floating_point T>
+    constexpr Quaternion<T>::Quaternion(Radian<T> radian, Vec2<T> axis) noexcept
+    {
+        axis.normalize();
+        const T halfAngle = radian.value / T{2};
+        const T s = std::sin(halfAngle);
+        
+        this->x = axis.x() * s;
+        this->y = axis.y() * s;
+        this->z = T{0};
         this->w = std::cos(halfAngle);
     }
 

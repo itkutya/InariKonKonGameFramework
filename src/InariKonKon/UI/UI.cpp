@@ -8,7 +8,7 @@ namespace ikk
     {
         //TODO:
         //Deal with the negative position
-        Transform2D transform{ -position, rotation, size / 2.f };
+        Transform2D transform{ position, rotation, size };
         this->addComponent(std::move(transform));
     }
 

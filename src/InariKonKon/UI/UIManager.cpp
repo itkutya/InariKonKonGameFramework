@@ -5,6 +5,7 @@
 #include "InariKonKon/Math/Mat.hpp"
 
 #include "InariKonKon/Core/ExternalLibraries/OpenGL.hpp" // IWYU pragma: keep
+#include "InariKonKon/Math/Math.hpp"
 
 namespace ikk
 {
@@ -51,7 +52,7 @@ namespace ikk
     {
         glBindBuffer(GL_UNIFORM_BUFFER, this->m_ubo);
         glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Mat4x4f),
-            &this->m_defaultUICamera.getProjectionMatrix(window.getViewport()).at(0, 0)); 
+            &(this->m_defaultUICamera.getProjectionMatrix(window.getViewport()).convertTo<MatrixOrdering::ColumnMajor>().at(0, 0))); 
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
     }
 }

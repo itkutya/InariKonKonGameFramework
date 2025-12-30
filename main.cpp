@@ -15,6 +15,9 @@ public:
 
     void onUpdate(const ikk::Time& dt) noexcept override
     {
+        button.getComponent<ikk::Transform2D>().value()->rotateLocal(ikk::Degreef{900.f * dt.asSeconds()});
+        button.getComponent<ikk::Transform2D>().value()->translateLocal(ikk::Vec2f{50.f, 50.f} * dt.asSeconds());
+        button.getComponent<ikk::Transform2D>().value()->translate(ikk::Vec2f{50.f, 50.f} * dt.asSeconds());
     }
 
     void onRender(const ikk::Window& window) const noexcept override
@@ -22,7 +25,7 @@ public:
         window.draw(button);
     }
 
-    ikk::Button button{ikk::Vec2f{ 230.f, 250.f }, ikk::Vec2f{ 100.f, 100.f }, {}, ikk::Color::Blue};
+    ikk::Button button{ikk::Vec2f{ 100.f, 100.f }, ikk::Vec2f{ 100.f, 100.f }, {}, ikk::Color::Blue};
 };
 
 int main()

@@ -36,16 +36,16 @@ namespace ikk
 
         const Camera* camera = component.getCamera();
 
+        //TODO:
+        //This should be handeld by ubo...
         switch (component.getType() )
         {
-            case Drawable::Type::Object:
-                shader->setUniform("view", camera->getViewMatrix());
-                shader->setUniform("projection", camera->getProjectionMatrix(window.getAscpectRation()));
-                break;
-            case Drawable::Type::UI:
-                shader->setUniform("projection", camera->getProjectionMatrix(window.getViewport()));
-                break;
-        
+        case Drawable::Type::Object:
+            shader->setUniform("view", camera->getViewMatrix());
+            shader->setUniform("projection", camera->getProjectionMatrix(window.getAscpectRation()));
+            break;
+        case Drawable::Type::UI:
+            break;
         }
 
         window.getRenderer()->draw(entity, component);

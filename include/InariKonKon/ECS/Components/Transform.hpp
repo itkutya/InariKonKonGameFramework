@@ -75,13 +75,19 @@ namespace ikk
         [[nodiscard]] const VecType getUp() const noexcept;
         [[nodiscard]] const VecType getForward() const noexcept;
 
+        void translate(PositionType position) noexcept;
         void translateLocal(PositionType position) noexcept;
         void translateGlobal(PositionType position) noexcept;
 
-        void rotateLocal(Degree<float> degree, VecType direction) noexcept;
-        void rotateLocal(Radian<float> radian, VecType direction) noexcept;
-        void rotateGlobal(Degree<float> degree, VecType axes) noexcept;
-        void rotateGlobal(Radian<float> radian, VecType axes) noexcept;
+        void rotateLocal(Degree<float> degree, VecType direction) noexcept requires(D == Dimension::_3D);
+        void rotateLocal(Radian<float> radian, VecType direction) noexcept requires(D == Dimension::_3D);
+        void rotateGlobal(Degree<float> degree, VecType axes) noexcept requires(D == Dimension::_3D);
+        void rotateGlobal(Radian<float> radian, VecType axes) noexcept requires(D == Dimension::_3D);
+
+        void rotateLocal(Degree<float> degree) noexcept requires(D == Dimension::_2D);
+        void rotateLocal(Radian<float> radian) noexcept requires(D == Dimension::_2D);
+        void rotateGlobal(Degree<float> degree) noexcept requires(D == Dimension::_2D);
+        void rotateGlobal(Radian<float> radian) noexcept requires(D == Dimension::_2D);
 
         void setLocalScale(ScaleType scale) noexcept;
         void setWorldScale(ScaleType scale) noexcept;
@@ -207,6 +213,13 @@ namespace ikk
     }
 
     template<Dimension D>
+    void Transform<D>::translate(PositionType position) noexcept
+    {
+        this->m_localPosition += position;
+        this->m_dirty = true;
+    }
+
+    template<Dimension D>
     void Transform<D>::translateLocal(Transform<D>::PositionType position) noexcept
     {
         this->m_localPosition += (this->m_localRotation * position);
@@ -237,13 +250,13 @@ namespace ikk
     }
 
     template<Dimension D>
-    void Transform<D>::rotateLocal(Degree<float> degree, Transform<D>::VecType direction) noexcept
+    void Transform<D>::rotateLocal(Degree<float> degree, Transform<D>::VecType direction) noexcept requires(D == Dimension::_3D)
     {
         this->rotateLocal(toRadian(degree), direction);
     }
 
     template<Dimension D>
-    void Transform<D>::rotateLocal(Radian<float> radian, Transform<D>::VecType direction) noexcept
+    void Transform<D>::rotateLocal(Radian<float> radian, Transform<D>::VecType direction) noexcept requires(D == Dimension::_3D)
     {
         if (isZero(direction.length()))
             return;
@@ -255,19 +268,47 @@ namespace ikk
     }
 
     template<Dimension D>
-    void Transform<D>::rotateGlobal(Degree<float> degree, Transform<D>::VecType axes) noexcept
+    void Transform<D>::rotateGlobal(Degree<float> degree, Transform<D>::VecType axes) noexcept requires(D == Dimension::_3D)
     {
         this->rotateGlobal(toRadian(degree), axes);
     }
 
     template<Dimension D>
-    void Transform<D>::rotateGlobal(Radian<float> radian, Transform<D>::VecType axes) noexcept
+    void Transform<D>::rotateGlobal(Radian<float> radian, Transform<D>::VecType axes) noexcept requires(D == Dimension::_3D)
     {
         if (isZero(axes.length()))
             return;
 
         axes.normalize();
         this->m_localRotation = Quaternionf{radian, axes} * this->m_localRotation;
+        this->m_localRotation.normalize();
+        this->m_dirty = true;
+    }
+
+    template<Dimension D>
+    void Transform<D>::rotateLocal(Degree<float> degree) noexcept requires(D == Dimension::_2D)
+    {
+        this->rotateLocal(toRadian(degree));
+    }
+
+    template<Dimension D>
+    void Transform<D>::rotateLocal(Radian<float> radian) noexcept requires(D == Dimension::_2D)
+    {
+        this->m_localRotation = this->m_localRotation * Quaternionf{radian, Vec3f::Z()};
+        this->m_localRotation.normalize();
+        this->m_dirty = true;
+    }
+
+    template<Dimension D>
+    void Transform<D>::rotateGlobal(Degree<float> degree) noexcept requires(D == Dimension::_2D)
+    {
+        this->rotateGlobal(toRadian(degree));
+    }
+
+    template<Dimension D>
+    void Transform<D>::rotateGlobal(Radian<float> radian) noexcept requires(D == Dimension::_2D)
+    {
+        this->m_localRotation = Quaternionf{radian, Vec3f::Z()} * this->m_localRotation;
         this->m_localRotation.normalize();
         this->m_dirty = true;
     }

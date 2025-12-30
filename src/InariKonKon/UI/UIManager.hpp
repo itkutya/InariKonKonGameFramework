@@ -25,17 +25,26 @@ namespace ikk
     private:
         std::uint32_t m_ubo;
 
+        /*
+        enum struct Pivot :std::uint8_t
+        {
+            TopLeft, TopCenter, TopRight,
+            CenterLeft, Center, CenterRight,
+            BottomLeft, BottomCenter, BottomRight
+        };
+        */
+
         Model m_defaultUIModel =
         {
         .m_vertices =
             {
-                {{-1.f,  1.f, -1.f}}, {{ 1.f,  1.f, -1.f}},
-                {{ 1.f, -1.f, -1.f}}, {{-1.f, -1.f, -1.f}}
+                {{0.f, 0.f, 0.f}}, {{0.f, 1.f, 0.f}},
+                {{1.f, 0.f, 0.f}}, {{1.f, 1.f, 0.f}}
             },
         .m_indices =
             {
                 0, 1, 2,
-                2, 3, 0
+                2, 1, 3
             }
         };
 
@@ -59,7 +68,12 @@ namespace ikk
 
                 void main()
                 {
-                    gl_Position = transpose(projection) * vec4(model * position, 1.0f);
+                    mat4 model3D = mat4(
+                        vec4(model[0][0], model[0][1], 0.0, 0.0),
+                        vec4(model[1][0], model[1][1], 0.0, 0.0),
+                        vec4(0.0        , 0.0        , 1.0, 0.0),
+                        vec4(model[2][0], model[2][1], 0.0, 1.0));
+                    gl_Position = projection * model3D * vec4(position, 1.0);
                     fragColor = color;
                 }
                 )"
@@ -81,7 +95,7 @@ namespace ikk
             }
         };
 
-        Camera m_defaultUICamera = {};
+        Camera m_defaultUICamera = { Camera::Type::None, {}, 0.f, 0.f, -1.f, 1.f };
 
         friend Singleton<UIManager>;
     };
