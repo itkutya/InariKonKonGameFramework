@@ -12,7 +12,6 @@ namespace ikk
         virtual ~UI() noexcept;
     protected:
         [[nodiscard]] UI(Vec2f position, Vec2f size, Degreef rotation) noexcept;
-        [[nodiscard]] UI(Vec2f position, Vec2f size, Radianf rotation) noexcept;
 
         UI(const UI&) noexcept = default;
         UI(UI&&) noexcept = default;

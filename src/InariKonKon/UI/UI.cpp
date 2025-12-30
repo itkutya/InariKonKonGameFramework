@@ -5,11 +5,6 @@
 namespace ikk
 {
     UI::UI(Vec2f position, Vec2f size, Degreef rotation) noexcept
-        : UI(position, size, toRadian(rotation))
-    {
-    }
-
-    UI::UI(Vec2f position, Vec2f size, Radianf rotation) noexcept
     {
         Transform2D transform{ position, {0.f, 0.f, rotation}, size };
         this->addComponent(std::move(transform));

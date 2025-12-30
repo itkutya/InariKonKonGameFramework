@@ -5,11 +5,6 @@
 namespace ikk
 {
     Button::Button(std::string_view text, Vec2f position, Vec2f size, Degreef rotation, Color color, float radius) noexcept
-        : Button(text, position, size, toRadian(rotation), color, radius)
-    {
-    }
-
-    Button::Button(std::string_view text, Vec2f position, Vec2f size, Radianf rotation, Color color, float radius) noexcept
         : UI(position, size, rotation), m_text(text)
     {
         this->addComponent(UIManager::getInstance().createDefaultDrawableObject());

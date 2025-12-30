@@ -19,7 +19,6 @@ namespace ikk
         };
 
         [[nodiscard]] Button(std::string_view text, Vec2f position = {}, Vec2f size = { 1, 1 }, Degreef rotation = {}, Color color = Color::White, float radius = 0.0f) noexcept;
-        [[nodiscard]] Button(std::string_view text, Vec2f position = {}, Vec2f size = { 1, 1 }, Radianf rotation = {}, Color color = Color::White, float radius = 0.0f) noexcept;
 
         Button(const Button&) noexcept = default;
         Button(Button&&) noexcept = default;
