@@ -4,6 +4,7 @@
 #include <format>
 
 #include "InariKonKon/Utility/Clamped.hpp"
+#include "InariKonKon/Utility/Utility.hpp"
 
 namespace ikk
 {
@@ -12,14 +13,8 @@ namespace ikk
         struct [[nodiscard]] Channel final
         {
             [[nodiscard]] constexpr Channel() noexcept = default;
-
-            [[nodiscard]] inline constexpr Channel(std::uint8_t value) noexcept
-                : value(value / static_cast<float>(std::numeric_limits<std::uint8_t>::max()))
-            {};
-            
-            [[nodiscard]] inline constexpr Channel(float value) noexcept
-                : value(value)
-            {};
+            [[nodiscard]] constexpr Channel(std::uint8_t value) noexcept;
+            [[nodiscard]] constexpr Channel(Clamped<float, 0.f, 1.f> value) noexcept;
 
             constexpr Channel(const Channel&) noexcept = default;
             constexpr Channel(Channel&&) noexcept = default;
@@ -29,29 +24,18 @@ namespace ikk
 
             constexpr ~Channel() noexcept = default;
 
-            [[nodiscard]] inline constexpr operator float() const noexcept
-            {
-                return value.value();
-            }
+            [[nodiscard]] constexpr operator float() const noexcept;
+            [[nodiscard]] constexpr operator std::uint8_t() const noexcept;
 
-            [[nodiscard]] inline constexpr std::uint8_t toUInt8() const noexcept
-            {
-                return static_cast<std::uint8_t>(value.value() * std::numeric_limits<std::uint8_t>::max());
-            }
+            [[nodiscard]] constexpr float toFloat() const noexcept;
+            [[nodiscard]] constexpr std::uint8_t toUInt8() const noexcept;
 
-            Clamped<float, 0.f, 1.f> value = 0.f;
+            std::uint8_t value = 0;
         };
 
         [[nodiscard]] constexpr Color() noexcept = default;
-
-        [[nodiscard]] inline constexpr Color(Channel r, Channel g, Channel b, Channel a = { 1.f }) noexcept
-            : r(r), g(g), b(b), a(a)
-        {};
-
-        [[nodiscard]] inline constexpr Color(std::uint32_t rgba) noexcept
-            : r(static_cast<std::uint8_t>((rgba >> 24) & 0xFF)), g(static_cast<std::uint8_t>((rgba >> 16) & 0xFF)),
-              b(static_cast<std::uint8_t>((rgba >> 8) & 0xFF)), a(static_cast<std::uint8_t>(rgba & 0xFF))
-        {};
+        [[nodiscard]] constexpr Color(Channel r, Channel g, Channel b, Channel a = { 0xff }) noexcept;
+        [[nodiscard]] constexpr Color(std::uint32_t rgba) noexcept;
 
         constexpr Color(const Color&) noexcept = default;
         constexpr Color(Color&&) noexcept = default;
@@ -61,18 +45,12 @@ namespace ikk
 
         constexpr ~Color() noexcept = default;
 
-        [[nodiscard]] inline constexpr std::uint32_t toUInt32() const noexcept
-        {
-            return (static_cast<std::uint32_t>(r.toUInt8()) << 24) |
-                   (static_cast<std::uint32_t>(g.toUInt8()) << 16) |
-                   (static_cast<std::uint32_t>(b.toUInt8()) << 8)  |
-                   (static_cast<std::uint32_t>(a.toUInt8()));
-        }
+        [[nodiscard]] constexpr std::uint32_t toUInt32() const noexcept;
 
         Channel r = {};
         Channel g = {};
         Channel b = {};
-        Channel a = { 1.f };
+        Channel a = { 0xff };
 
         static const Color White;
         static const Color Black;
@@ -84,18 +62,72 @@ namespace ikk
         static const Color Cyan;
         static const Color CornflowerBlue;
         static const Color Transparent;
+
+        static const Color Miku;
+        static const Color Teto;
+        static const Color Rin;
     };
 
-    inline constexpr Color Color::White             { 1.f, 1.f, 1.f, 1.f };
-    inline constexpr Color Color::Black             { 0.f, 0.f, 0.f, 1.f };
-    inline constexpr Color Color::Red               { 1.f, 0.f, 0.f, 1.f };
-    inline constexpr Color Color::Green             { 0.f, 1.f, 0.f, 1.f };
-    inline constexpr Color Color::Blue              { 0.f, 0.f, 1.f, 1.f };
-    inline constexpr Color Color::Yellow            { 1.f, 1.f, 0.f, 1.f };
-    inline constexpr Color Color::Magenta           { 1.f, 0.f, 1.f, 1.f };
-    inline constexpr Color Color::Cyan              { 0.f, 1.f, 1.f, 1.f };
-    inline constexpr Color Color::CornflowerBlue    { 0.392f, 0.584f, 0.929f, 1.f };
-    inline constexpr Color Color::Transparent       { 0.f, 0.f, 0.f, 0.f };
+    constexpr Color::Channel::Channel(std::uint8_t value) noexcept
+        : value(value)
+    {};
+
+    constexpr Color::Channel::Channel(Clamped<float, 0.f, 1.f> value) noexcept
+        : value(value.value() * std::numeric_limits<std::uint8_t>::max())
+    {};
+
+    constexpr Color::Channel::operator float() const noexcept
+    {
+        return this->toFloat();
+    }
+
+    constexpr Color::Channel::operator std::uint8_t() const noexcept
+    {
+        return this->toUInt8();
+    }
+
+    constexpr float Color::Channel::toFloat() const noexcept
+    {
+        return this->value / FLOAT(std::numeric_limits<std::uint8_t>::max());
+    }
+
+    constexpr std::uint8_t Color::Channel::toUInt8() const noexcept
+    {
+        return this->value;
+    }
+
+    constexpr Color::Color(Channel r, Channel g, Channel b, Channel a) noexcept
+        : r(r), g(g), b(b), a(a)
+    {};
+
+    constexpr Color::Color(std::uint32_t rgba) noexcept
+        : r(U8((rgba >> 24) & 0xFF)), g(U8((rgba >> 16) & 0xFF)), b(U8((rgba >> 8) & 0xFF)), a(U8(rgba & 0xFF))
+    {};
+
+    constexpr std::uint32_t Color::toUInt32() const noexcept
+    {
+        return (U32(r.toUInt8()) << 24) | (U32(g.toUInt8()) << 16) | (U32(b.toUInt8()) << 8)  | (U32(a.toUInt8()));
+    }
+
+    inline constexpr Color Color::White             { 0xff, 0xff, 0xff };
+    inline constexpr Color Color::Black             { 0x00, 0x00, 0x00 };
+    inline constexpr Color Color::Red               { 0xff, 0x00, 0x00 };
+    inline constexpr Color Color::Green             { 0x00, 0xff, 0x00 };
+    inline constexpr Color Color::Blue              { 0x00, 0x00, 0xff };
+    inline constexpr Color Color::Yellow            { 0xff, 0xff, 0x00 };
+    inline constexpr Color Color::Magenta           { 0xff, 0x00, 0xff };
+    inline constexpr Color Color::Cyan              { 0x00, 0xff, 0xff };
+    inline constexpr Color Color::CornflowerBlue
+    {
+        Clamped<float, 0.f, 1.f>{0.392f},
+        Clamped<float, 0.f, 1.f>{0.584f},
+        Clamped<float, 0.f, 1.f>{0.929f}
+    };
+    inline constexpr Color Color::Transparent       { 0x00, 0x00, 0x00, 0x00 };
+
+    inline constexpr Color Color::Miku       { 0x39, 0xC5, 0xBB };
+    inline constexpr Color Color::Teto       { 0xE3, 0x42, 0x34 };
+    inline constexpr Color Color::Rin        { 0xFF, 0xD7, 0x00 };
 }
 
 template<>
@@ -109,7 +141,7 @@ public:
 
     constexpr auto format(const ikk::Color::Channel& channel, std::format_context& ctx) const noexcept
     {
-        return std::format_to(ctx.out(), "{}", channel.value.value());
+        return std::format_to(ctx.out(), "{}", channel.value);
     }
 };
 

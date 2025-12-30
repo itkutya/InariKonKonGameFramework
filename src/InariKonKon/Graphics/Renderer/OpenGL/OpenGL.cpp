@@ -59,7 +59,7 @@ namespace ikk
         glCheck(glEnableVertexAttribArray(0));
         glCheck(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position)));
         glCheck(glEnableVertexAttribArray(1));
-        glCheck(glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color)));
+        glCheck(glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)offsetof(Vertex, color)));
 
         glCheck(glBindVertexArray(0));
 

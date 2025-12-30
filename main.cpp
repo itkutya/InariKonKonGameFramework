@@ -22,7 +22,7 @@ public:
         window.draw(button);
     }
 
-    ikk::Button button{"Button", ikk::Vec2f{ 100.f, 100.f }, ikk::Vec2f{ 100.f, 100.f }, ikk::Degreef{25.f}, ikk::Color::Blue};
+    ikk::Button button{"Button", { 100.f, 100.f }, { 100.f, 100.f }, ikk::Degreef{}, ikk::Color::Miku};
 };
 
 int main()
