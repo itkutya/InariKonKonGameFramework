@@ -29,47 +29,6 @@ namespace ikk
         glCheck(glViewport(0, 0, window.getSettings().videomode.width, window.getSettings().videomode.height));
     }
 
-    /*
-    template<typename VertexT>
-    struct VertexTraits;
-
-    template<class VecType, class... Attributes>
-    struct VertexTraits<VertexBase<VecType, Attributes...>>
-    {
-        using VertexType = VertexBase<VecType, Attributes...>;
-
-        static constexpr size_t stride = sizeof(VertexType);
-
-        static constexpr bool hasColor = HasAttribute<Color, Attributes...>::value;
-        static constexpr bool hasNormal = HasAttribute<Vec2f, Attributes...>::value;
-
-        static constexpr size_t positionOffset = offsetof(VertexType, position);
-        static constexpr size_t colorOffset = hasColor ? offsetof(VertexType, color) : 0;
-        static constexpr size_t normalOffset = hasNormal ? offsetof(VertexType, normal) : 0;
-    };
-
-    template<class VertexT>
-    void setupVertexAttribs()
-    {
-        constexpr auto stride = VertexTraits<VertexT>::stride;
-
-        glCheck(glEnableVertexAttribArray(0));
-        glCheck(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)VertexTraits<VertexT>::positionOffset));
-
-        if constexpr (VertexTraits<VertexT>::hasColor)
-        {
-            glCheck(glEnableVertexAttribArray(1));
-            glCheck(glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, (void*)VertexTraits<VertexT>::colorOffset));
-        }
-
-        if constexpr (VertexTraits<VertexT>::hasNormal)
-        {
-            glCheck(glEnableVertexAttribArray(2));
-            glCheck(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (void*)VertexTraits<VertexT>::normalOffset));
-        }
-    }
-    */
-
     void OpenGL::registerEntity(const Entity& entity) noexcept
     {
         if (std::find_if(this->m_objects.begin(), this->m_objects.end(), this->matchEntity(entity)) != this->m_objects.end())
@@ -81,10 +40,12 @@ namespace ikk
 
         const Model& model = drawable->getModel();
         const std::vector<std::byte>& vertices = model.getRawVertexBuffer();
-        const std::vector<std::uint32_t>& indices = model.getIndices();
 
         if (vertices.empty() == true)
             return;
+
+        const std::vector<std::uint32_t>& indices = model.getIndices();
+        const std::vector<VertexAttribute>& attributes = model.getVertexAttributes();
 
         glCheck(glGenVertexArrays(1, &temp.VAO));
         glCheck(glGenBuffers(1, &temp.VBO));
@@ -98,14 +59,13 @@ namespace ikk
         glCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, temp.EBO));
         glCheck(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(std::uint32_t), &indices.at(0), GL_STATIC_DRAW));
 
-        //
-        glCheck(glEnableVertexAttribArray(0));
-        glCheck(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, model.getVertexStride(), (void*)offsetof(UIVertex, position)));
-
-        glCheck(glEnableVertexAttribArray(1));
-        glCheck(glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, model.getVertexStride(), (void*)offsetof(UIVertex, color)));
-        //
-        //setupVertexAttribs<std::remove_cvref<decltype(vertices)>::type::value_type>();
+        for (std::size_t i = 0; i < attributes.size(); ++i)
+        {
+            const VertexAttribute& attribute = attributes.at(i);
+            glCheck(glEnableVertexAttribArray(i));
+            glCheck(glVertexAttribPointer(i, attribute.count, attribute.type,
+                attribute.normalized, model.getVertexStride(), attribute.offset));
+        }
 
         glCheck(glBindVertexArray(0));
 

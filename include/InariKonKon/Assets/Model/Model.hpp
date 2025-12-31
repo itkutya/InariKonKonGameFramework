@@ -37,13 +37,16 @@ namespace ikk
         template<class VertexType>
         [[nodiscard]] const std::span<VertexType> getVertexBuffer() noexcept;
 
+        [[nodiscard]] const std::vector<VertexAttribute>& getVertexAttributes() const noexcept;
         [[nodiscard]] const std::vector<std::byte>& getRawVertexBuffer() const noexcept;
-        [[nodiscard]] std::size_t getVertexStride() const noexcept;
         [[nodiscard]] const std::vector<std::uint32_t>& getIndices() const noexcept;
+        [[nodiscard]] std::size_t getVertexStride() const noexcept;
     private:
         std::vector<std::byte> m_vertexBuffer = {};
         std::size_t m_vertexStride = 0;
         std::vector<std::uint32_t> m_indices = {};
+
+        std::vector<VertexAttribute> m_vertexAttributes = {};
     };
 
     template<class VertexType>
@@ -53,6 +56,9 @@ namespace ikk
         const std::size_t bufferSize = vertices.size() * this->m_vertexStride;
         this->m_vertexBuffer.resize(bufferSize);
         std::memcpy(this->m_vertexBuffer.data(), vertices.data(), bufferSize);
+
+        const std::array<VertexAttribute, VertexType::getAttributeCount()>& attributes = VertexType::createAttributes();
+        this->m_vertexAttributes = std::vector<VertexAttribute>{ attributes.begin(), attributes.end() };
     }
 
     template<class VertexType>
