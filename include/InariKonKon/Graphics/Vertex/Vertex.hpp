@@ -19,21 +19,6 @@ namespace ikk
         std::size_t offset = 0;
     };
 
-    template<typename T, typename... Ts>
-    struct HasAttribute : std::disjunction<std::is_same<T, Ts>...> {};
-
-    template<class... Ts>
-    struct UniqueAttributes : std::true_type {};
-
-    template<class T, class... Ts>
-    struct UniqueAttributes<T, Ts...> : std::bool_constant<(!std::same_as<T, Ts> && ...) && UniqueAttributes<Ts...>::value> {};
-
-    template<class T>
-    concept VecType = requires { typename T::Type; } && std::is_arithmetic<typename T::Type>::value;
-
-    template<class T>
-    concept VertexAttributeType = std::same_as<T, Color> || std::same_as<T, Vec2f>;
-
     struct Empty{};
 
     struct TextureCoord
@@ -42,13 +27,28 @@ namespace ikk
         Clamped<float, 0.f, 1.f> y = 0.f;
     };
 
+    template<class T>
+    concept VecType = requires { typename T::Type; } && std::is_arithmetic<typename T::Type>::value;
+
+    template<class T>
+    concept VertexAttributeType = std::same_as<T, Color> || std::same_as<T, TextureCoord>;
+
+    template<class... Ts>
+    struct UniqueAttributes : std::true_type {};
+
+    template<class T, class... Ts>
+    struct UniqueAttributes<T, Ts...> : std::bool_constant<(!std::same_as<T, Ts> && ...) && UniqueAttributes<Ts...>::value> {};
+
+    template<VertexAttributeType T, VertexAttributeType... Ts>
+    struct HasAttribute : std::disjunction<std::is_same<T, Ts>...> {};
+
     template<VecType VecType, VertexAttributeType... Attributes> requires UniqueAttributes<Attributes...>::value
     struct [[nodiscard]] VertexBase
     {
         VecType position{};
 
         [[no_unique_address]] std::conditional_t<HasAttribute<Color, Attributes...>::value, Color, Empty> color{};
-        [[no_unique_address]] std::conditional_t<HasAttribute<Vec2f, Attributes...>::value, TextureCoord, Empty> texCoord{};
+        [[no_unique_address]] std::conditional_t<HasAttribute<TextureCoord, Attributes...>::value, TextureCoord, Empty> texCoord{};
 
         static constexpr std::size_t getAttributeCount() noexcept;
         static constexpr std::size_t getStride() noexcept;
@@ -56,14 +56,13 @@ namespace ikk
         static constexpr std::array<VertexAttribute, getAttributeCount()> createAttributes() noexcept;
     };
 
-    using DVertex = VertexBase<Vec2u>;
-    using UIVertex = VertexBase<Vec2f, Color>;
-    using Vertex = VertexBase<Vec3f, Color>;
+    using UIVertex = VertexBase<Vec2f, Color, TextureCoord>;
+    using Vertex = VertexBase<Vec3f, Color, TextureCoord>;
 
     template<VecType VecType, VertexAttributeType... Attributes> requires UniqueAttributes<Attributes...>::value
     constexpr std::size_t VertexBase<VecType, Attributes...>::getAttributeCount() noexcept
     {
-        return 1 + (HasAttribute<Color, Attributes...>::value ? 1 : 0) + (HasAttribute<Vec2f, Attributes...>::value ? 1 : 0);
+        return 1 + (HasAttribute<Color, Attributes...>::value ? 1 : 0) + (HasAttribute<TextureCoord, Attributes...>::value ? 1 : 0);
     }
 
     template<VecType VecType, VertexAttributeType... Attributes> requires UniqueAttributes<Attributes...>::value
@@ -96,6 +95,11 @@ namespace ikk
         attributes.at(1).normalized = true;
         attributes.at(1).offset = offsetof(UIVertex, color);
 
+        attributes.at(2).count = 2;
+        attributes.at(2).type = VertexAttribute::Type::Float;
+        attributes.at(2).normalized = false;
+        attributes.at(2).offset = offsetof(UIVertex, texCoord);
+
         return attributes;
     }
 
@@ -113,6 +117,11 @@ namespace ikk
         attributes.at(1).type = VertexAttribute::Type::UInt8;
         attributes.at(1).normalized = false;
         attributes.at(1).offset = offsetof(UIVertex, color);
+
+        attributes.at(2).count = 2;
+        attributes.at(2).type = VertexAttribute::Type::Float;
+        attributes.at(2).normalized = false;
+        attributes.at(2).offset = offsetof(UIVertex, texCoord);
 
         return attributes;
     }
