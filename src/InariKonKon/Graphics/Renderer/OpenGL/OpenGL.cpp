@@ -1,7 +1,5 @@
 #include "InariKonKon/Graphics/Renderer/OpenGL/OpenGL.hpp"
 
-#include <cstddef>
-
 #include "InariKonKon/Core/ExternalLibraries/OpenGL.hpp"
 #include "InariKonKon/Core/ExternalLibraries/GLFW.hpp" // IWYU pragma: keep
 
@@ -27,14 +25,18 @@ namespace ikk
         const int version = gladLoadGL(glfwGetProcAddress);
         DEBUG_LOG("OpenGL version: {}.{}", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
         glCheck(glViewport(0, 0, window.getSettings().videomode.width, window.getSettings().videomode.height));
+
+        //TEMP
+        //TODO:
+        //Put it into UI or something...
+        glCheck(glEnable(GL_BLEND));
+        glCheck(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     }
 
     void OpenGL::registerEntity(const Entity& entity) noexcept
     {
         if (std::find_if(this->m_objects.begin(), this->m_objects.end(), this->matchEntity(entity)) != this->m_objects.end())
             return;
-
-        OpenGLObject temp{};
 
         const Drawable* drawable = entity.getComponent<Drawable>().value();
 
@@ -44,27 +46,54 @@ namespace ikk
         if (vertices.empty() == true)
             return;
 
-        const std::vector<std::uint32_t>& indices = model.getIndices();
-        const std::vector<VertexAttribute>& attributes = model.getVertexAttributes();
+        OpenGLObject temp{};
 
         glCheck(glGenVertexArrays(1, &temp.VAO));
-        glCheck(glGenBuffers(1, &temp.VBO));
-        glCheck(glGenBuffers(1, &temp.EBO));
-
         glCheck(glBindVertexArray(temp.VAO));
 
+        glCheck(glGenBuffers(1, &temp.VBO));
         glCheck(glBindBuffer(GL_ARRAY_BUFFER, temp.VBO));
         glCheck(glBufferData(GL_ARRAY_BUFFER, vertices.size(), &vertices.at(0), GL_STATIC_DRAW));
 
-        glCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, temp.EBO));
-        glCheck(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(std::uint32_t), &indices.at(0), GL_STATIC_DRAW));
+        const std::vector<std::uint32_t>& indices = model.getIndices();
+        if (indices.size() != 0)
+        {
+            glCheck(glGenBuffers(1, &temp.EBO));
+            glCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, temp.EBO));
+            glCheck(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(std::uint32_t), &indices.at(0), GL_STATIC_DRAW));
+        }
 
+        const std::vector<VertexAttribute>& attributes = model.getVertexAttributes();
         for (std::size_t i = 0; i < attributes.size(); ++i)
         {
+            static constexpr auto convertToOpenGLType = [](VertexAttribute::Type type) noexcept
+            {
+                switch (type)
+                {
+                case VertexAttribute::Type::Float:
+                    return GL_FLOAT;
+                case VertexAttribute::Type::Double:
+                    return GL_DOUBLE;
+                case VertexAttribute::Type::Int8:
+                    return GL_BYTE;
+                case VertexAttribute::Type::UInt8:
+                    return GL_UNSIGNED_BYTE;
+                case VertexAttribute::Type::Int16:
+                    return GL_SHORT;
+                case VertexAttribute::Type::UInt16:
+                    return GL_UNSIGNED_SHORT;
+                case VertexAttribute::Type::Int32:
+                    return GL_INT;
+                case VertexAttribute::Type::UInt32:
+                    return GL_UNSIGNED_INT;
+                }
+                return 0;
+            };
+
             const VertexAttribute& attribute = attributes.at(i);
             glCheck(glEnableVertexAttribArray(i));
-            glCheck(glVertexAttribPointer(i, attribute.count, attribute.type,
-                attribute.normalized, model.getVertexStride(), attribute.offset));
+            glCheck(glVertexAttribPointer(i, attribute.count, convertToOpenGLType(attribute.type),
+                attribute.normalized, model.getVertexStride(), (const void*)attribute.offset));
         }
 
         glCheck(glBindVertexArray(0));
@@ -88,13 +117,18 @@ namespace ikk
         if (it == this->m_objects.end())
             return;
 
-        //TEMP
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
         const Drawable* drawable = entity.getComponent<Drawable>().value();
+        const std::vector<std::uint32_t>& indices = drawable->getModel().getIndices();
         glCheck(glBindVertexArray(it->second.VAO));
-        glCheck(glDrawElements(GL_TRIANGLES, drawable->getModel().getIndices().size(), GL_UNSIGNED_INT, 0));
+        if (indices.empty() == true)
+        {
+            const std::size_t verticesCount = drawable->getModel().getRawVertexBuffer().size() / drawable->getModel().getVertexStride();
+            glCheck(glDrawArrays(GL_TRIANGLES, 0, verticesCount));
+        }
+        else
+        {
+            glCheck(glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0));
+        }
     }
 
     void OpenGL::newFrame(const Color& color) const noexcept

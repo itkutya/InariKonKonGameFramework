@@ -6,18 +6,14 @@
 #include <vector>
 #include <span>
 
-#include "InariKonKon/Graphics/Vertex/Vertex.hpp" // IWYU pragma: keep
+#include "InariKonKon/Graphics/Vertex/Vertex.hpp"
 
 namespace ikk
 {
-    //TODO:
-    //Somehow fix this...
     class [[nodiscard]] Model final
     {
     public:
-        //TODO:
-        //Constrain types...
-        template<class VertexType>
+        template<VertexType VertexType>
         [[nodiscard]] Model(const std::vector<VertexType>& vertices, const std::vector<std::uint32_t>& indices) noexcept;
 
         //TODO:
@@ -31,10 +27,10 @@ namespace ikk
 
         ~Model() noexcept = default;
 
-        template<class VertexType>
+        template<VertexType VertexType>
         [[nodiscard]] const std::span<const VertexType> getVertexBuffer() const noexcept;
 
-        template<class VertexType>
+        template<VertexType VertexType>
         [[nodiscard]] const std::span<VertexType> getVertexBuffer() noexcept;
 
         [[nodiscard]] const std::vector<VertexAttribute>& getVertexAttributes() const noexcept;
@@ -43,13 +39,13 @@ namespace ikk
         [[nodiscard]] std::size_t getVertexStride() const noexcept;
     private:
         std::vector<std::byte> m_vertexBuffer = {};
-        std::size_t m_vertexStride = 0;
         std::vector<std::uint32_t> m_indices = {};
 
         std::vector<VertexAttribute> m_vertexAttributes = {};
+        std::size_t m_vertexStride = 0;
     };
 
-    template<class VertexType>
+    template<VertexType VertexType>
     Model::Model(const std::vector<VertexType>& vertices, const std::vector<std::uint32_t>& indices) noexcept
         : m_vertexStride(sizeof(VertexType)), m_indices(indices)
     {
@@ -61,13 +57,13 @@ namespace ikk
         this->m_vertexAttributes = std::vector<VertexAttribute>{ attributes.begin(), attributes.end() };
     }
 
-    template<class VertexType>
+    template<VertexType VertexType>
     const std::span<const VertexType> Model::getVertexBuffer() const noexcept
     {
         return std::span<const VertexType>{reinterpret_cast<const VertexType*>(this->m_vertexBuffer.data()), this->m_vertexBuffer.size() / sizeof(VertexType)};
     }
 
-    template<class VertexType>
+    template<VertexType VertexType>
     const std::span<VertexType> Model::getVertexBuffer() noexcept
     {
         return std::span<VertexType>{reinterpret_cast<VertexType*>(this->m_vertexBuffer.data()), this->m_vertexBuffer.size() / sizeof(VertexType)};

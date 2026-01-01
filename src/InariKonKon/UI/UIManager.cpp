@@ -1,6 +1,7 @@
 #include "InariKonKon/UI/UIManager.hpp"
 
 #include "InariKonKon/Core/ExternalLibraries/OpenGL.hpp" // IWYU pragma: keep
+
 #include "InariKonKon/ECS/Components/Drawable.hpp"
 #include "InariKonKon/Core/Window/Window.hpp"
 

@@ -18,6 +18,8 @@ namespace ikk
     {
         static_assert(N >= 1);
     public:
+        using Type = T;
+
         constexpr Vec() noexcept = default;
         constexpr Vec(T value) noexcept;
         constexpr Vec(std::span<T, N> span) noexcept;
