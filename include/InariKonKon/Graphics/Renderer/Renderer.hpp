@@ -31,6 +31,8 @@ namespace ikk
 
         virtual void registerEntity(const Entity& entity) noexcept = 0;
 
+        virtual void updateUnifromBufferObjects(const Window& window) noexcept = 0;
+
         virtual void onWindowResize(Vec2u newSize) const noexcept = 0;
         virtual void onFramebufferResize(Vec2u newSize) const noexcept = 0;
 

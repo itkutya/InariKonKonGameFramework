@@ -13,7 +13,6 @@ namespace ikk
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
         #ifdef __APPLE__
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         #endif
@@ -98,7 +97,54 @@ namespace ikk
 
         glCheck(glBindVertexArray(0));
 
+        const Camera& camera = entity.getComponent<Drawable>().value()->getCamera();
+        const auto it = std::find_if(this->m_ubos.begin(), this->m_ubos.end(),
+            [&camera](const std::pair<const Camera*, CameraUniformBufferObject>& pair) 
+            {
+                return &camera == pair.first;
+            });
+
+        if (it == this->m_ubos.end())
+        {
+            CameraUniformBufferObject object{};
+            glGenBuffers(1, &object.UBO);
+            glBindBuffer(GL_UNIFORM_BUFFER, object.UBO);
+            glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(Mat4x4f), NULL, GL_STATIC_DRAW);
+            glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+            const ShaderProgram& shader = entity.getComponent<Drawable>().value()->getShaderProgram();
+
+            glUniformBlockBinding(shader.getID(),
+                glGetUniformBlockIndex(shader.getID(), "CameraMatrices"), 0);
+            glBindBufferBase(GL_UNIFORM_BUFFER, 0, object.UBO);
+
+            object.ignoreZ = true;
+
+            this->m_ubos.emplace_back(&camera, std::move(object));
+        }
+
         this->m_objects.emplace_back(&entity, std::move(temp));
+    }
+
+    void OpenGL::updateUnifromBufferObjects(const Window& window) noexcept
+    {
+        for (const auto& [camera, object] : this->m_ubos)
+        {
+            glCheck(glBindBuffer(GL_UNIFORM_BUFFER, object.UBO));
+            if (object.ignoreZ == true)
+            {
+                glCheck(glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Mat4x4f),
+                    &(camera->getProjectionMatrix(window.getViewport()).convertTo<MatrixOrdering::ColumnMajor>().at(0, 0))));
+            }
+            else
+            {
+                glCheck(glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Mat4x4f),
+                    &(camera->getProjectionMatrix(window.getAscpectRation()).convertTo<MatrixOrdering::ColumnMajor>().at(0, 0))));
+            }
+            glCheck(glBufferSubData(GL_UNIFORM_BUFFER, sizeof(Mat4x4f), sizeof(Mat4x4f),
+                &(camera->getViewMatrix().convertTo<MatrixOrdering::ColumnMajor>().at(0, 0))));
+            glCheck(glBindBuffer(GL_UNIFORM_BUFFER, 0));
+        }
     }
 
     void OpenGL::onWindowResize(Vec2u newSize) const noexcept

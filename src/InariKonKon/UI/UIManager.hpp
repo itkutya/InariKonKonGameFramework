@@ -18,13 +18,7 @@ namespace ikk
         [[nodiscard]] const Camera& getDefaultUICamera() const noexcept;
 
         [[nodiscard]] Drawable createDefaultDrawableObject() noexcept;
-
-        void updateUniformBufferObjects(const Window& window) noexcept;
-    protected:
-        [[nodiscard]] UIManager() noexcept;
     private:
-        std::uint32_t m_ubo;
-
         /*
         enum struct Pivot :std::uint8_t
         {
@@ -33,7 +27,6 @@ namespace ikk
             BottomLeft, BottomCenter, BottomRight
         };
         */
-
         Model m_defaultUIModel =
             {
             std::vector<UIVertex>
@@ -60,9 +53,10 @@ namespace ikk
 
                     uniform mat3 model;
 
-                    layout (std140, binding = 0) uniform Matrices
+                    layout (std140, binding = 0) uniform CameraMatrices
                     {
                         mat4 projection;
+                        mat4 view;
                     };
 
                     out vec4 fragColor;
@@ -75,7 +69,7 @@ namespace ikk
                             vec4(model[1][0], model[1][1], 0.0, 0.0),
                             vec4(0.0        , 0.0        , 1.0, 0.0),
                             vec4(model[2][0], model[2][1], 0.0, 1.0));
-                        gl_Position = projection * model3D * vec4(position, 1.0);
+                        gl_Position = projection * view * model3D * vec4(position, 1.0);
 
                         fragColor = color;
                         fragPosWorld = (model * vec3(position.xy, 1.0)).xy;

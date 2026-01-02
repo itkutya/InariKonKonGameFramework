@@ -19,9 +19,9 @@ namespace ikk
             DEBUG_LOG(Log::Level::Error, "OpenGL Error: error code: {}, function: {}, file: {}, line: {}", error, function, file, line);
     }
 
-#define glCheck(x) \
-    glClearError(); \
-    x; \
+#define glCheck(x)                      \
+    glClearError();                     \
+    x;                                  \
     glLogCall(#x, __FILE__, __LINE__);
 #else
 #define glCheck(x) x

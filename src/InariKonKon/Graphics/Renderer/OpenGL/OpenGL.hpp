@@ -8,6 +8,7 @@
 namespace ikk
 {
     class Entity;
+    class Camera;
 
     class [[nodiscard]] OpenGL final : public Renderer
     {
@@ -16,6 +17,12 @@ namespace ikk
             std::uint32_t VAO = 0;
             std::uint32_t VBO = 0;
             std::uint32_t EBO = 0;
+        };
+
+        struct CameraUniformBufferObject
+        {
+            std::uint32_t UBO = 0;
+            bool ignoreZ = false;
         };
     public:
         [[nodiscard]] OpenGL() noexcept;
@@ -32,6 +39,8 @@ namespace ikk
 
         void registerEntity(const Entity& entity) noexcept override;
 
+        void updateUnifromBufferObjects(const Window& window) noexcept override;
+
         void onWindowResize(Vec2u newSize) const noexcept override;
         void onFramebufferResize(Vec2u newSize) const noexcept override;
 
@@ -41,6 +50,7 @@ namespace ikk
         void endFrame(const Window& window) const noexcept override;
     private:
         std::vector<std::pair<const Entity*, OpenGLObject>> m_objects = {};
+        std::vector<std::pair<const Camera*, CameraUniformBufferObject>> m_ubos = {};
 
         constexpr auto matchEntity(const Entity& entity) const noexcept;
     };

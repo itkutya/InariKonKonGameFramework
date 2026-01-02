@@ -139,7 +139,7 @@ namespace ikk
     void Window::beginRender() const noexcept
     {
         this->m_renderer->newFrame(this->m_settings.clearColor);
-        UIManager::getInstance().updateUniformBufferObjects(*this);
+        this->m_renderer->updateUnifromBufferObjects(*this);
     }
 
     void Window::endRender() const noexcept
