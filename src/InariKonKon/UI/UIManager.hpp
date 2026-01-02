@@ -1,7 +1,8 @@
 #ifndef IKK_UI_MANAGER_HPP
 #define IKK_UI_MANAGER_HPP
 
-#include "InariKonKon/ECS/Components/Drawable.hpp"
+#include "InariKonKon/Assets/Shader/ShaderProgram.hpp"
+#include "InariKonKon/ECS/Entities/Camera/Camera.hpp"
 #include "InariKonKon/Utility/Singleton.hpp"
 
 namespace ikk
@@ -13,11 +14,8 @@ namespace ikk
     public:
         ~UIManager() noexcept = default;
 
-        [[nodiscard]] const Model& getDefaultUIModel() const noexcept;
         [[nodiscard]] const ShaderProgram& getDefaultShaderProgram() const noexcept;
         [[nodiscard]] const Camera& getDefaultUICamera() const noexcept;
-
-        [[nodiscard]] Drawable createDefaultDrawableObject() noexcept;
     private:
         /*
         enum struct Pivot :std::uint8_t
@@ -27,21 +25,7 @@ namespace ikk
             BottomLeft, BottomCenter, BottomRight
         };
         */
-        Model m_defaultUIModel =
-            {
-            std::vector<UIVertex>
-                {
-                    {{0.f, 0.f }}, {{0.f, 1.f }},
-                    {{1.f, 0.f }}, {{1.f, 1.f }}
-                },
-            std::vector<std::uint32_t>
-                {
-                    0, 1, 2,
-                    2, 1, 3
-                }
-            };
-
-        ShaderProgram m_defaultUIShader =
+        const ShaderProgram m_defaultUIShader =
             {
                 VertexShader
                 {
@@ -105,7 +89,7 @@ namespace ikk
                 }
         };
 
-        Camera m_defaultUICamera = { Camera::Type::None, {}, 0.f, 0.f, -1.f, 1.f };
+        const Camera m_defaultUICamera = { Camera::Type::None, {}, 0.f, 0.f, -1.f, 1.f };
 
         friend Singleton<UIManager>;
     };

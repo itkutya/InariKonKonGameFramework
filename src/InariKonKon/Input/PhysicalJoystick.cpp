@@ -25,7 +25,7 @@ namespace ikk
 
     [[nodiscard]] bool PhysicalJoystick::isConnected(Joystick::ID id) noexcept
     {
-        return glfwJoystickPresent(INT(id)) == GLFW_TRUE;
+        return glfwJoystickPresent(I32(id)) == GLFW_TRUE;
     }
 
     std::int32_t PhysicalJoystick::getJoystickButtonState(Joystick::Button button) const noexcept

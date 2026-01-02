@@ -154,7 +154,7 @@ namespace ikk
     {
         InputManager::getInstance().checkForConnectedJoysticks();
 
-        if (GLFWwindow* window = glfwCreateWindow(INT(settings.videomode.width), INT(settings.videomode.height),
+        if (GLFWwindow* window = glfwCreateWindow(I32(settings.videomode.width), I32(settings.videomode.height),
             TO_ANSI(settings.title.data()), nullptr, nullptr); window != nullptr)
         {
             DEBUG_LOG("Window created: {}", *this);

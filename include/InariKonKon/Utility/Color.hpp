@@ -88,7 +88,7 @@ namespace ikk
 
     constexpr float Color::Channel::toFloat() const noexcept
     {
-        return this->value / FLOAT(std::numeric_limits<std::uint8_t>::max());
+        return this->value / F32(std::numeric_limits<std::uint8_t>::max());
     }
 
     constexpr std::uint8_t Color::Channel::toUInt8() const noexcept

@@ -85,10 +85,10 @@ namespace ikk
     template<Camera::Projection P> requires (P == Camera::Projection::Orthografic)
     const Mat4x4f Camera::getProjectionMatrix(Rectf rect) const noexcept
     {
-        const float left = rect.left;
-        const float right = rect.left + rect.width;
-        const float top = rect.top;
-        const float bottom = rect.top + rect.height;
+        const float left    = rect.getLeft();
+        const float right   = rect.getRight();
+        const float top     = rect.getTop();
+        const float bottom  = rect.getBottom();
 
         if (right == left || top == bottom || this->m_farPlane == this->m_nearPlane)
             return Mat4x4f::Identity();

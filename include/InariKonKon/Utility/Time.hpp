@@ -44,7 +44,7 @@ namespace ikk
 
     constexpr float Time::asSeconds() const noexcept
     {
-        return FLOAT(this->m_value.count() / 1000000.f);
+        return F32(this->m_value.count() / 1000000.f);
     }
 
     constexpr std::int32_t Time::asMilliseconds() const noexcept

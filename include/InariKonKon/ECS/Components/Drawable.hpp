@@ -10,7 +10,7 @@ namespace ikk
     class [[nodiscard]] Drawable final
     {
     public:
-        [[nodiscard]] Drawable(Model& model, ShaderProgram& shaderProgram, Camera& camera) noexcept;
+        [[nodiscard]] Drawable(const Model& model, const ShaderProgram& shaderProgram, const Camera& camera) noexcept;
 
         Drawable(const Drawable& other) noexcept = default;
         Drawable(Drawable&& other) noexcept = default;
@@ -24,19 +24,15 @@ namespace ikk
 
         bool isActive() const noexcept;
 
-        Model& getModel() noexcept;
-        ShaderProgram& getShaderProgram() noexcept;
-        Camera& getCamera() noexcept;
-
         const Model& getModel() const noexcept;
         const ShaderProgram& getShaderProgram() const noexcept;
         const Camera& getCamera() const noexcept;
     private:
         bool m_disabled = true;
         
-        ShaderProgram* m_shaderProgram = nullptr;
-        Camera* m_camera = nullptr;
-        Model* m_model = nullptr;
+        const ShaderProgram* m_shaderProgram = nullptr;
+        const Camera* m_camera = nullptr;
+        const Model* m_model = nullptr;
     };
 }
 

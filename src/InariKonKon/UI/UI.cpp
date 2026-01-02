@@ -13,4 +13,9 @@ namespace ikk
     {
         this->removeComponent<Transform2D>();
     }
+
+    const Model& UI::getModel() const noexcept
+    {
+        return this->m_model;
+    }
 }
