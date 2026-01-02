@@ -6,6 +6,7 @@
 
 #include "InariKonKon/Utility/NonConstructible.hpp"
 #include "InariKonKon/Core/Event/Event.hpp"
+#include "InariKonKon/Utility/Log.hpp"
 
 namespace ikk
 {

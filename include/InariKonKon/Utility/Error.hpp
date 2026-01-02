@@ -3,8 +3,6 @@
 
 #include <string_view>
 
-#include "InariKonKon/Utility/Log.hpp"
-
 namespace ikk
 {
     class [[nodiscard]] Error
@@ -26,7 +24,6 @@ namespace ikk
     constexpr Error::Error(std::string_view description) noexcept
         : m_description(description)
     {
-        DEBUG_LOG(Log::Level::Error, "{}", this->m_description);
     }
 
     constexpr const std::string_view& Error::what() const noexcept

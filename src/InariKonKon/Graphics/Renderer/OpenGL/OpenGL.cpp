@@ -118,6 +118,7 @@ namespace ikk
                 glGetUniformBlockIndex(shader.getID(), "CameraMatrices"), 0);
             glBindBufferBase(GL_UNIFORM_BUFFER, 0, object.UBO);
 
+            //TODO:
             object.ignoreZ = true;
 
             this->m_ubos.emplace_back(&camera, std::move(object));

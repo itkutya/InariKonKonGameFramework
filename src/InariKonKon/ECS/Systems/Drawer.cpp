@@ -15,22 +15,31 @@ namespace ikk
             return;
         }
 
-        const ShaderProgram& shader = component.getShaderProgram();
-        if (entity.hasComponent<Transform3D>() == true)
-        {
-            const Transform3D* transform = entity.getComponent<Transform3D>().value();
-            shader.setUniform("model", transform->getWorldMatrix());
-        }
-        else if (entity.hasComponent<Transform2D>() == true)
-        {
-            const Transform2D* transform = entity.getComponent<Transform2D>().value();
-            shader.setUniform("model", transform->getWorldMatrix());
-        }
-        else
+        using Transform = std::variant<const Transform3D*, const Transform2D*>;
+        const std::expected<Transform, Error> transform = entity.getComponent<Transform3D>().transform(
+            [](const Transform3D* t) noexcept -> Transform
+            {
+                return t;
+            }).or_else([&](const Error&) noexcept
+            {
+                return entity.getComponent<Transform2D>().transform([](const Transform2D* t) noexcept -> Transform
+                {
+                    return t;
+                });
+            });
+        
+        if (transform.has_value() == false)
         {
             DEBUG_LOG(Log::Level::Warning, "No Transform component found for drawable entity.");
             return;
         }
+
+        std::visit([&component](const auto* transform)
+            {
+                const ShaderProgram& shader = component.getShaderProgram();
+                shader.setUniform("model", transform->getWorldMatrix());
+            }, transform.value());
+
         window.getRenderer()->draw(entity);
     }
 }

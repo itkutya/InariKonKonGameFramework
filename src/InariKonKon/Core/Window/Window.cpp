@@ -123,6 +123,8 @@ namespace ikk
             this->m_renderer->registerEntity(entity);
             drawable.value()->setActive();
         }
+        else
+            DEBUG_LOG(Log::Level::Warning, "Entity does not have a drawable component!");
     }
 
     bool Window::shouldClose() const noexcept
