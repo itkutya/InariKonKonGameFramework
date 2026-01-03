@@ -16,6 +16,7 @@
 
 namespace ikk
 {
+    class UI;
     //TODO:
     //Figure out a way so that the users can create their own events as well...
     class [[nodiscard]] Event final
@@ -174,10 +175,22 @@ namespace ikk
             };
         };
 
-        //TODO:
         struct UI
         {
-            
+            struct Hovered
+            {
+                ikk::UI* entity;
+            };
+
+            struct Pressed
+            {
+                ikk::UI* entity;
+            };
+
+            struct Held
+            {
+                ikk::UI* entity;
+            };
         };
 
         template<class T>
@@ -227,7 +240,10 @@ namespace ikk
                 Input::Joystick::Disconnected,
                 Input::Joystick::Button,
                 Input::Joystick::Axis,
-                Input::Joystick::Hat>
+                Input::Joystick::Hat,
+                UI::Hovered,
+                UI::Pressed,
+                UI::Held>
             m_data;
         
         void dispatch() const noexcept;
@@ -279,10 +295,10 @@ namespace ikk
 
     //TODO:
     //Type alias rest...
-    using WindowEvent = Event::Window;
-    using KeyboardEvent = Event::Input::Keyboard;
-    using MouseEvent = Event::Input::Mouse;
-    using JoystickEvent = Event::Input::Joystick;
+    using WindowEvent       = Event::Window;
+    using KeyboardEvent     = Event::Input::Keyboard;
+    using MouseEvent        = Event::Input::Mouse;
+    using JoystickEvent     = Event::Input::Joystick;
 }
 
 #endif

@@ -29,4 +29,41 @@ namespace ikk
     {
         return this->m_state != State::None;
     }
+
+    void Button::onNotify(const MouseEvent::Button& event) noexcept
+    {
+        if (event.button != Mouse::Button::Left)
+            return;
+
+        switch (event.state)
+        {
+            case Input::State::Pressed:
+                if (this->m_hovered == true)
+                    this->m_state = State::Held;
+                break;
+            case Input::State::Released:
+                if (this->m_hovered == true)
+                        this->m_state = State::Pressed;
+                else
+                    this->m_state = State::None;
+                break;
+            case Input::State::Repeat:
+            //Mouse can't be repeated, because GLFW does not support it sadly...
+                return;
+            case Input::State::Unknown:
+                return;
+        }
+    }
+    
+    void Button::onNotify(const MouseEvent::Move& event) noexcept
+    {
+        const Transform2D& transform = *this->getComponent<Transform2D>().value();
+        Rectf rect{ transform.getWorldPosition(), transform.getWorldScale() };
+        this->m_hovered = rect.contains(event.position, transform.getWorldRotation());
+
+        if (this->m_hovered == false && this->m_state == State::Held)
+            this->m_state = State::Withheld;
+        else if (this->m_hovered == true && this->m_state == State::Withheld)
+            this->m_state = State::Held;
+    }
 }

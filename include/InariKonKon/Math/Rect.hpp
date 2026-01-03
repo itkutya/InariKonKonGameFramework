@@ -1,7 +1,7 @@
 #ifndef IKK_RECT_HPP
 #define IKK_RECT_HPP
 
-#include "InariKonKon/Utility/Utility.hpp"
+#include "InariKonKon/Math/Quaternion.hpp"
 #include "InariKonKon/Math/Math.hpp"
 #include "InariKonKon/Math/Vec.hpp"
 
@@ -36,8 +36,11 @@ namespace ikk
         [[nodiscard]] constexpr T& getWidth() noexcept;
         [[nodiscard]] constexpr T& getHeight() noexcept;
 
-        [[nodiscard]] constexpr bool contains(Vec2f point) const noexcept;
-        [[nodiscard]] constexpr bool contains(Vec2d point) const noexcept;
+        template<Number U>
+        [[nodiscard]] constexpr bool contains(Vec2<U> point) const noexcept;
+
+        template<Number U>
+        [[nodiscard]] constexpr bool contains(Vec2<U> point, Quaternionf rotation, Vec2f anchor = { 0.f, 0.f }) const noexcept;
     private:
         T m_left      = T{0};
         T m_top       = T{0};
@@ -128,18 +131,35 @@ namespace ikk
     }
 
     template<Number T>
-    constexpr bool Rect<T>::contains(Vec2f point) const noexcept
-    {
-        return this->contains(Vec2d{ F64(point.x()), F64(point.y()) });
-    }
-
-    template<Number T>
-    constexpr bool Rect<T>::contains(Vec2d point) const noexcept
+    template<Number U>
+    constexpr bool Rect<T>::contains(Vec2<U> point) const noexcept
     {
         return  point.x() >= this->getLeft()    &&
                 point.y() >= this->getTop()     &&
                 point.x() <= this->getRight()   &&
                 point.y() <= this->getBottom();
+    }
+
+    template<Number T>
+    template<Number U>
+    constexpr bool Rect<T>::contains(Vec2<U> point, Quaternionf rotation, Vec2f anchor) const noexcept
+    {
+        const Vec2<T> pivot =
+        { 
+            this->m_left + (this->m_width * anchor.x()), 
+            this->m_top + (this->m_height * anchor.y()) 
+        };
+
+        const Vec2<T> d = point - pivot;
+
+        const Vec2<T> localPoint = rotation.getConjugate() * d;
+
+        const T minX = -this->m_width * static_cast<T>(anchor.x());
+        const T maxX =  this->m_width * static_cast<T>((1.0f - anchor.x()));
+        const T minY = -this->m_height * static_cast<T>(anchor.y());
+        const T maxY =  this->m_height * static_cast<T>((1.0f - anchor.y()));
+
+        return localPoint.x() >= minX && localPoint.x() <= maxX && localPoint.y() >= minY && localPoint.y() <= maxY;
     }
 }
 

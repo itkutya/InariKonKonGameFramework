@@ -53,7 +53,7 @@ namespace ikk
     template<EventSubType T>
     void EventListener<T>::add() noexcept
     {
-        if (const auto found = std::ranges::find(this, s_listeners); found != s_listeners.end())
+        if (const auto found = std::ranges::find(s_listeners, this); found != s_listeners.end())
             return;
 
         s_listeners.emplace_back(this);

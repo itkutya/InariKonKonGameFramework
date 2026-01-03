@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "InariKonKon/Core/Event/EventListener.hpp"
 #include "InariKonKon/Utility/Color.hpp"
 #include "InariKonKon/UI/UI.hpp"
 
@@ -10,12 +11,12 @@ namespace ikk
 {
     class Window;
 
-    class [[nodiscard]] Button final : public UI
+    class [[nodiscard]] Button final : public UI, public EventListener<MouseEvent::Button>, public EventListener<MouseEvent::Move>
     {
     public:
         enum struct State : std::uint8_t
         {
-            Pressed, Held, None
+            Pressed, Held, Withheld, None
         };
 
         [[nodiscard]] Button(std::string_view text, Vec2f position = {}, Vec2f size = { 1, 1 }, Degreef rotation = {}, Color color = Color::White, float radius = 0.0f) noexcept;
@@ -31,9 +32,14 @@ namespace ikk
         [[nodiscard]] const State& getState() const noexcept;
 
         [[nodiscard]] bool isPressed() const noexcept;
-    private:
+
         State m_state = State::None;
+        bool m_hovered = false;
+    private:
         std::string m_text{};
+
+        void onNotify(const MouseEvent::Button& event) noexcept override;
+        void onNotify(const MouseEvent::Move& event) noexcept override;
     };
 }
 

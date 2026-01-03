@@ -8,6 +8,7 @@
 #include <array>
 #include <cmath>
 #include <span>
+#include <type_traits>
 
 #include "InariKonKon/Math/Math.hpp"
 
@@ -31,6 +32,16 @@ namespace ikk
 
         constexpr Vec& operator=(const Vec&) noexcept = default;
         constexpr Vec& operator=(Vec&&) noexcept = default;
+
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        constexpr Vec(const Vec<N, U>& other) noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        constexpr Vec(Vec<N, U>&& other) noexcept;
+
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        constexpr Vec<N, T>& operator=(const Vec<N, U>& other) noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        constexpr Vec<N, T>& operator=(Vec<N, U>&& other) noexcept;
 
         constexpr ~Vec() noexcept = default;
 
@@ -96,6 +107,65 @@ namespace ikk
 
         [[nodiscard]] constexpr T cross(const Vec& rhs) const noexcept requires (N == 2);
         [[nodiscard]] constexpr Vec cross(const Vec& rhs) const noexcept requires (N == 3);
+
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        [[nodiscard]] constexpr Vec<N, U> operator+(const Vec<N, U>& rhs) const noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        [[nodiscard]] constexpr Vec<N, U> operator-(const Vec<N, U>& rhs) const noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        [[nodiscard]] constexpr Vec<N, U> operator*(const Vec<N, U>& rhs) const noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        [[nodiscard]] constexpr Vec<N, U> operator/(const Vec<N, U>& rhs) const noexcept;
+
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        constexpr Vec<N, U> operator+(U scalar) const noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        constexpr Vec<N, U> operator-(U scalar) const noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        constexpr Vec<N, U> operator*(U scalar) const noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        constexpr Vec<N, U> operator/(U scalar) const noexcept;
+
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        constexpr Vec<N, T>& operator+=(const Vec<N, U>& rhs) noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        constexpr Vec<N, T>& operator-=(const Vec<N, U>& rhs) noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        constexpr Vec<N, T>& operator*=(const Vec<N, U>& rhs) noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        constexpr Vec<N, T>& operator/=(const Vec<N, U>& rhs) noexcept;
+
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        constexpr Vec<N, T>& operator+=(U scalar) noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        constexpr Vec<N, T>& operator-=(U scalar) noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        constexpr Vec<N, T>& operator*=(U scalar) noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        constexpr Vec<N, T>& operator/=(U scalar) noexcept;
+
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        [[nodiscard]] constexpr bool operator==(const Vec<N, U>& rhs) const noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        [[nodiscard]] constexpr bool operator!=(const Vec<N, U>& rhs) const noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        [[nodiscard]] constexpr bool operator<(const Vec<N, U>& rhs) const noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        [[nodiscard]] constexpr bool operator>(const Vec<N, U>& rhs) const noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        [[nodiscard]] constexpr bool operator<=(const Vec<N, U>& rhs) const noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        [[nodiscard]] constexpr bool operator>=(const Vec<N, U>& rhs) const noexcept;
+
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        [[nodiscard]] constexpr T dot(const Vec<N, U>& rhs) const noexcept;
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        [[nodiscard]] constexpr T distance(const Vec<N, U>& rhs) const noexcept;
+
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        [[nodiscard]] constexpr T cross(const Vec<N, U>& rhs) const noexcept requires (N == 2);
+        template<Number U> requires (std::is_convertible<U, T>::value)
+        [[nodiscard]] constexpr Vec<N, T> cross(const Vec<N, U>& rhs) const noexcept requires (N == 3);
     private:
         std::array<T, N> m_data{T{0}};
     };
@@ -151,6 +221,40 @@ namespace ikk
     {
         assert(list.size() == N);
         std::copy(list.begin(), list.end(), this->m_data.begin());
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, T>::Vec(const Vec<N, U>& other) noexcept
+    {
+        for (std::size_t i = 0; i < this->m_data.size(); ++i)
+            this->m_data.at(i) = static_cast<T>(other.at(i));
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, T>::Vec(Vec<N, U>&& other) noexcept
+    {
+        for (std::size_t i = 0; i < this->m_data.size(); ++i)
+            this->m_data.at(i) = std::move(static_cast<T>(other.at(i)));
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, T>& Vec<N, T>::operator=(const Vec<N, U>& other) noexcept
+    {
+        for (std::size_t i = 0; i < this->m_data.size(); ++i)
+            this->m_data.at(i) = static_cast<T>(other.at(i));
+        return *this;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, T>& Vec<N, T>::operator=(Vec<N, U>&& other) noexcept
+    {
+        for (std::size_t i = 0; i < this->m_data.size(); ++i)
+            this->m_data.at(i) = std::move(static_cast<T>(other.at(i)));
+        return *this;
     }
 
     template<std::size_t N, Number T>
@@ -494,6 +598,227 @@ namespace ikk
 
     template<std::size_t N, Number T>
     [[nodiscard]] inline constexpr Vec<N, T> operator*(T scalar, const Vec<N, T>& v) noexcept
+    {
+        return v * scalar;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, U> Vec<N, T>::operator+(const Vec<N, U>& rhs) const noexcept
+    {
+        Vec<N, U> out = *this;
+        out += rhs;
+        return out;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, U> Vec<N, T>::operator-(const Vec<N, U>& rhs) const noexcept
+    {
+        Vec<N, U> out = *this;
+        out -= rhs;
+        return out;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, U> Vec<N, T>::operator*(const Vec<N, U>& rhs) const noexcept
+    {
+        Vec<N, U> out = *this;
+        out *= rhs;
+        return out;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, U> Vec<N, T>::operator/(const Vec<N, U>& rhs) const noexcept
+    {
+        Vec<N, U> out = *this;
+        out /= rhs;
+        return out;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, U> Vec<N, T>::operator+(U scalar) const noexcept
+    {
+        Vec<N, U> out = *this;
+        out += static_cast<T>(scalar);
+        return out;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, U> Vec<N, T>::operator-(U scalar) const noexcept
+    {
+        Vec<N, U> out = *this;
+        out -= static_cast<T>(scalar);
+        return out;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, U> Vec<N, T>::operator*(U scalar) const noexcept
+    {
+        Vec<N, U> out = *this;
+        out *= static_cast<T>(scalar);
+        return out;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, U> Vec<N, T>::operator/(U scalar) const noexcept
+    {
+        Vec<N, U> out = *this;
+        out /= static_cast<T>(scalar);
+        return out;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, T>& Vec<N, T>::operator+=(const Vec<N, U>& rhs) noexcept
+    {
+        for (std::size_t i = 0; i < N; ++i) this->m_data.at(i) += static_cast<T>(rhs.at(i));
+        return *this;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, T>& Vec<N, T>::operator-=(const Vec<N, U>& rhs) noexcept
+    {
+        for (std::size_t i = 0; i < N; ++i) this->m_data.at(i) -= static_cast<T>(rhs.at(i));
+        return *this;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, T>& Vec<N, T>::operator*=(const Vec<N, U>& rhs) noexcept
+    {
+        for (std::size_t i = 0; i < N; ++i) this->m_data.at(i) *= static_cast<T>(rhs.at(i));
+        return *this;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, T>& Vec<N, T>::operator/=(const Vec<N, U>& rhs) noexcept
+    {
+        for (std::size_t i = 0; i < N; ++i) this->m_data.at(i) /= static_cast<T>(rhs.at(i));
+        return *this;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, T>& Vec<N, T>::operator+=(U scalar) noexcept
+    {
+        for (std::size_t i = 0; i < N; ++i) this->m_data.at(i) += static_cast<T>(scalar);
+        return *this;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, T>& Vec<N, T>::operator-=(U scalar) noexcept
+    {
+        for (std::size_t i = 0; i < N; ++i) this->m_data.at(i) -= static_cast<T>(scalar);
+        return *this;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, T>& Vec<N, T>::operator*=(U scalar) noexcept
+    {
+        for (std::size_t i = 0; i < N; ++i) this->m_data.at(i) *= static_cast<T>(scalar);
+        return *this;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, T>& Vec<N, T>::operator/=(U scalar) noexcept
+    {
+        for (std::size_t i = 0; i < N; ++i) this->m_data.at(i) /= static_cast<T>(scalar);
+        return *this;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr bool Vec<N, T>::operator==(const Vec<N, U>& rhs) const noexcept
+    {
+        for (std::size_t i = 0; i < N; ++i) if (this->m_data.at(i) != static_cast<T>(rhs.at(i))) return false;
+        return true;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr bool Vec<N, T>::operator!=(const Vec<N, U>& rhs) const noexcept
+    {
+        return !(*this == rhs);
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr bool Vec<N, T>::operator<(const Vec<N, U>& rhs) const noexcept
+    {
+        return this->length_squared() < rhs.length_squared();
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr bool Vec<N, T>::operator>(const Vec<N, U>& rhs) const noexcept
+    {
+        return this->length_squared() > rhs.length_squared();
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr bool Vec<N, T>::operator<=(const Vec<N, U>& rhs) const noexcept
+    {
+        return this->length_squared() <= rhs.length_squared();
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr bool Vec<N, T>::operator>=(const Vec<N, U>& rhs) const noexcept
+    {
+        return this->length_squared() >= rhs.length_squared();
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr T Vec<N, T>::dot(const Vec<N, U>& rhs) const noexcept
+    {
+        T sum{};
+        for (std::size_t i = 0; i < N; ++i) sum += this->m_data.at(i) * static_cast<T>(rhs.at(i));
+        return sum;
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr T Vec<N, T>::distance(const Vec<N, U>& rhs) const noexcept
+    {
+        const Vec diff = *this - rhs;
+        return std::sqrt(diff.length_squared());
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr T Vec<N, T>::cross(const Vec<N, U>& rhs) const noexcept requires (N == 2)
+    {
+        return (this->x() * static_cast<T>(rhs.y())) - (this->y() * static_cast<T>(rhs.x()));
+    }
+
+    template<std::size_t N, Number T>
+    template<Number U> requires (std::is_convertible<U, T>::value)
+    constexpr Vec<N, T> Vec<N, T>::cross(const Vec<N, U>& rhs) const noexcept requires (N == 3)
+    {
+        return Vec<N, T>
+        {
+            (this->y() * static_cast<T>(rhs.z())) - (this->z() * static_cast<T>(rhs.y())),
+            (this->z() * static_cast<T>(rhs.x())) - (this->x() * static_cast<T>(rhs.z())),
+            (this->x() * static_cast<T>(rhs.y())) - (this->y() * static_cast<T>(rhs.x()))
+        };
+    }
+
+    template<std::size_t N, Number T, Number U>
+    [[nodiscard]] inline constexpr Vec<N, T> operator*(T scalar, const Vec<N, U>& v) noexcept
     {
         return v * scalar;
     }

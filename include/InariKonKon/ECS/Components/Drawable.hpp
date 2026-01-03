@@ -10,6 +10,9 @@ namespace ikk
     class [[nodiscard]] Drawable final
     {
     public:
+        //TODO:
+        //Type
+
         [[nodiscard]] Drawable(const Model& model, const ShaderProgram& shaderProgram, const Camera& camera) noexcept;
 
         Drawable(const Drawable& other) noexcept = default;
