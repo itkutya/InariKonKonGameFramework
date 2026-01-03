@@ -8,7 +8,6 @@
 #include <array>
 #include <cmath>
 #include <span>
-#include <type_traits>
 
 #include "InariKonKon/Math/Math.hpp"
 
