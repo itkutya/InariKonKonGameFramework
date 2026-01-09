@@ -2,9 +2,8 @@
 #define IKK_SHADER_BASE_HPP
 
 #include <string_view>
+#include <cstdint>
 #include <string>
-
-#include "InariKonKon/Math/Mat.hpp"
 
 namespace ikk
 {
@@ -35,18 +34,11 @@ namespace ikk
         ShaderBase& operator=(const ShaderBase& other) noexcept;
         ShaderBase& operator=(ShaderBase&& other) noexcept;
 
-        ~ShaderBase() noexcept;
+        virtual ~ShaderBase() noexcept;
 
         [[nodiscard]] virtual const Type& getType() const noexcept final;
         [[nodiscard]] virtual const IDType& getID() const noexcept final;
         [[nodiscard]] virtual IDType& getID() noexcept final;
-
-        virtual void setUniform(std::string_view name, float value) const noexcept final;
-        virtual void setUniform(std::string_view name, double value) const noexcept final;
-        virtual void setUniform(std::string_view name, std::int32_t value) const noexcept final;
-        virtual void setUniform(std::string_view name, std::uint32_t value) const noexcept final;
-        virtual void setUniform(std::string_view name, const Mat3x3f& value) const noexcept final;
-        virtual void setUniform(std::string_view name, const Mat4x4f& value) const noexcept final;
 
         [[nodiscard]] static constexpr std::string_view convertToString(Type type) noexcept;
     protected:

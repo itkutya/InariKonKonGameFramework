@@ -1,5 +1,6 @@
 #include "InariKonKon/Graphics/Renderer/OpenGL/OpenGL.hpp"
 
+#include "InariKonKon/Assets/Shader/ShaderProgram.hpp"
 #include "InariKonKon/Core/ExternalLibraries/OpenGL.hpp"
 #include "InariKonKon/Core/ExternalLibraries/GLFW.hpp" // IWYU pragma: keep
 
@@ -27,7 +28,9 @@ namespace ikk
 
         //TEMP
         //TODO:
-        //Put it into UI or something...
+        glCheck(glEnable(GL_STENCIL_TEST));
+        glCheck(glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE));
+        glCheck(glEnable(GL_DEPTH_TEST));
         glCheck(glEnable(GL_BLEND));
         glCheck(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     }
@@ -164,8 +167,14 @@ namespace ikk
         if (it == this->m_objects.end())
             return;
 
+        glCheck(glStencilFunc(GL_ALWAYS, 1, 0xFF));
+        glCheck(glStencilMask(0xFF));
+
         const Drawable* drawable = entity.getComponent<Drawable>().value();
         const std::vector<std::uint32_t>& indices = drawable->getModel().getIndices();
+        const ShaderProgram& shader = drawable->getShaderProgram();
+
+        shader.activate();
         glCheck(glBindVertexArray(it->second.VAO));
         if (indices.empty() == true)
         {
@@ -178,10 +187,48 @@ namespace ikk
         }
     }
 
+    /*
+    void OpenGL::drawOutline(const Entity& entity) const noexcept
+    {
+        const auto it = std::find_if(this->m_objects.begin(), this->m_objects.end(), this->matchEntity(entity));
+
+        if (it == this->m_objects.end())
+            return;
+
+        glCheck(glStencilFunc(GL_ALWAYS, 1, 0xFF));
+        glCheck(glStencilMask(0xFF));
+
+        const Drawable* drawable = entity.getComponent<Drawable>().value();
+        const std::vector<std::uint32_t>& indices = drawable->getModel().getIndices();
+        const ShaderProgram& shader = drawable->getShaderProgram();
+
+        shader.activate();
+        glCheck(glBindVertexArray(it->second.VAO));
+
+        glCheck(glStencilFunc(GL_NOTEQUAL, 1, 0xFF));
+        glCheck(glStencilMask(0x00));
+        glCheck(glDisable(GL_DEPTH_TEST))
+
+        if (indices.empty() == true)
+        {
+            const std::size_t verticesCount = drawable->getModel().getRawVertexBuffer().size() / drawable->getModel().getVertexStride();
+            glCheck(glDrawArrays(GL_TRIANGLES, 0, verticesCount));
+        }
+        else
+        {
+            glCheck(glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0));
+        }
+
+        glCheck(glStencilFunc(GL_ALWAYS, 1, 0xFF));
+        glCheck(glStencilMask(0xFF));
+        glCheck(glEnable(GL_DEPTH_TEST));
+    }
+    */
+
     void OpenGL::newFrame(const Color& color) const noexcept
     {
         glCheck(glClearColor(color.r, color.g, color.b, color.a));
-        glCheck(glClear(GL_COLOR_BUFFER_BIT));
+        glCheck(glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
     }
 
     void OpenGL::endFrame(const Window& window) const noexcept

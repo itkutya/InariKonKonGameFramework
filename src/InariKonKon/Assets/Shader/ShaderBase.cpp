@@ -58,42 +58,6 @@ namespace ikk
         return this->m_id;
     }
 
-    void ShaderBase::setUniform(std::string_view name, float value) const noexcept
-    {
-        glCheck(glUseProgram(this->m_id));
-        glCheck(glUniform1f(glGetUniformLocation(this->m_id, name.data()), value));
-    }
-
-    void ShaderBase::setUniform(std::string_view name, double value) const noexcept
-    {
-        glCheck(glUseProgram(this->m_id));
-        glCheck(glUniform1d(glGetUniformLocation(this->m_id, name.data()), value));
-    }
-
-    void ShaderBase::setUniform(std::string_view name, std::int32_t value) const noexcept
-    {
-        glCheck(glUseProgram(this->m_id));
-        glCheck(glUniform1i(glGetUniformLocation(this->m_id, name.data()), value));
-    }
-
-    void ShaderBase::setUniform(std::string_view name, std::uint32_t value) const noexcept
-    {
-        glCheck(glUseProgram(this->m_id));
-        glCheck(glUniform1ui(glGetUniformLocation(this->m_id, name.data()), value));
-    }
-
-    void ShaderBase::setUniform(std::string_view name, const Mat3x3f& value) const noexcept
-    {
-        glCheck(glUseProgram(this->m_id));
-        glCheck(glUniformMatrix3fv(glGetUniformLocation(this->m_id, name.data()), 1, GL_TRUE, &value.at(0, 0)));
-    }
-
-    void ShaderBase::setUniform(std::string_view name, const Mat4x4f& value) const noexcept
-    {
-        glCheck(glUseProgram(this->m_id));
-        glCheck(glUniformMatrix4fv(glGetUniformLocation(this->m_id, name.data()), 1, GL_TRUE, &value.at(0, 0)));
-    }
-
     void ShaderBase::compile() noexcept
     {
         constexpr auto convertToGLType = [](ShaderBase::Type type) noexcept

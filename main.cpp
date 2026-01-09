@@ -1,7 +1,6 @@
 #include "InariKonKon/InariKonKon.hpp"
 
 #include "InariKonKon/UI/Widgets/Button.hpp"
-#include "InariKonKon/Utility/Log.hpp"
 
 class MainMenu final : public ikk::Layer
 {
@@ -24,15 +23,6 @@ public:
             button.m_state = ikk::Button::State::None;
 
         btnState = button.getState();
-
-        if (button.getState() == ikk::Button::State::Pressed)
-            DEBUG_LOG("AAAAAAAAAAAAAAAAA");
-
-        if (button.getState() == ikk::Button::State::Withheld)
-            DEBUG_LOG("BBBBBBBBBBBBBBBBBBB");
-
-        if (button.getState() == ikk::Button::State::Held)
-            DEBUG_LOG("CCCCCCCCCCCCCCCC");
     }
 
     void onRender(const ikk::Window& window) const noexcept override

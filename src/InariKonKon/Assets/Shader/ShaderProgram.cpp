@@ -1,6 +1,7 @@
 #include "InariKonKon/Assets/Shader/ShaderProgram.hpp"
 
 #include "InariKonKon/Core/ExternalLibraries/OpenGL.hpp"
+#include "InariKonKon/Utility/Utility.hpp"
 
 namespace ikk
 {
@@ -32,6 +33,62 @@ namespace ikk
             this->compile();
         }
         return *this;
+    }
+
+    void ShaderProgram::setUniform(std::string_view name, float value) const noexcept
+    {
+        this->activate();
+        glCheck(glUniform1f(glGetUniformLocation(this->getID(), name.data()), value));
+    }
+
+    void ShaderProgram::setUniform(std::string_view name, double value) const noexcept
+    {
+        this->activate();
+        glCheck(glUniform1d(glGetUniformLocation(this->getID(), name.data()), value));
+    }
+
+    void ShaderProgram::setUniform(std::string_view name, std::int32_t value) const noexcept
+    {
+        this->activate();
+        glCheck(glUniform1i(glGetUniformLocation(this->getID(), name.data()), value));
+    }
+
+    void ShaderProgram::setUniform(std::string_view name, std::uint32_t value) const noexcept
+    {
+        this->activate();
+        glCheck(glUniform1ui(glGetUniformLocation(this->getID(), name.data()), value));
+    }
+
+    void ShaderProgram::setUniform(std::string_view name, bool value) const noexcept
+    {
+        this->activate();
+        glCheck(glUniform1i(glGetUniformLocation(this->getID(), name.data()), I32(value)));
+    }
+
+    void ShaderProgram::setUniform(std::string_view name, const Mat3x3f& value) const noexcept
+    {
+        this->activate();
+        glCheck(glUniformMatrix3fv(glGetUniformLocation(this->getID(), name.data()),
+            1, GL_TRUE, &value.at(0, 0)));
+    }
+
+    void ShaderProgram::setUniform(std::string_view name, const Mat4x4f& value) const noexcept
+    {
+        this->activate();
+        glCheck(glUniformMatrix4fv(glGetUniformLocation(this->getID(), name.data()),
+            1, GL_TRUE, &value.at(0, 0)));
+    }
+
+    void ShaderProgram::setUniform(std::string_view name, const Color& value) const noexcept
+    {
+        this->activate();
+        const std::array<float, 4> array{ value.r, value.g, value.b, value.a };
+        glCheck(glUniform4fv(glGetUniformLocation(this->getID(), name.data()), 1, array.data()));
+    }
+
+    void ShaderProgram::activate() const noexcept
+    {
+        glCheck(glUseProgram(this->getID()));
     }
 
     void ShaderProgram::compile() noexcept
