@@ -20,15 +20,14 @@ namespace ikk
 
         this->addComponent(std::move(drawable));
 
-        auto lambda = [this]() noexcept
+        Updateable update{[this]() noexcept
             {
                 if (this->getState() == Button::State::Pressed && this->m_prevState == Button::State::Pressed)
                     this->m_state = Button::State::None;
 
                 this->m_prevState = this->getState();
-            };
-        
-        Updateable update{lambda};
+            }};
+
         this->addComponent(std::move(update));
     }
 
