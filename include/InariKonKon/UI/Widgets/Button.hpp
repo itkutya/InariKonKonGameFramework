@@ -32,11 +32,11 @@ namespace ikk
         [[nodiscard]] const State& getState() const noexcept;
 
         [[nodiscard]] bool isPressed() const noexcept;
-
-        State m_state = State::None;
-        bool m_hovered = false;
     private:
         std::string m_text{};
+        State m_state = State::None;
+        State m_prevState = State::None;
+        bool m_hovered = false;
 
         void onNotify(const MouseEvent::Button& event) noexcept override;
         void onNotify(const MouseEvent::Move& event) noexcept override;

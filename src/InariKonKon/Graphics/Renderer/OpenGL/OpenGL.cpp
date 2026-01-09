@@ -55,7 +55,7 @@ namespace ikk
 
         glCheck(glGenBuffers(1, &temp.VBO));
         glCheck(glBindBuffer(GL_ARRAY_BUFFER, temp.VBO));
-        glCheck(glBufferData(GL_ARRAY_BUFFER, vertices.size(), &vertices.at(0), GL_STATIC_DRAW));
+        glCheck(glBufferData(GL_ARRAY_BUFFER, vertices.size(), &vertices.at(0), GL_DYNAMIC_DRAW));
 
         const std::vector<std::uint32_t>& indices = model.getIndices();
         if (indices.size() != 0)
@@ -173,6 +173,15 @@ namespace ikk
         const Drawable* drawable = entity.getComponent<Drawable>().value();
         const std::vector<std::uint32_t>& indices = drawable->getModel().getIndices();
         const ShaderProgram& shader = drawable->getShaderProgram();
+        const Model& model = drawable->getModel();
+
+        if (model.m_dirty == true)
+        {
+            const std::vector<std::byte>& vertices = model.getRawVertexBuffer();
+            glCheck(glBindBuffer(GL_ARRAY_BUFFER, it->second.VBO));
+            glCheck(glBufferData(GL_ARRAY_BUFFER, vertices.size(), &vertices.at(0), GL_DYNAMIC_DRAW));
+            model.m_dirty = false;
+        }
 
         shader.activate();
         glCheck(glBindVertexArray(it->second.VAO));

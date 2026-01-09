@@ -1,6 +1,7 @@
 #include "InariKonKon/UI/Widgets/Button.hpp"
 
 #include "InariKonKon/ECS/Components/Drawable.hpp"
+#include "InariKonKon/ECS/Components/Updateable.hpp"
 #include "InariKonKon/UI/UIManager.hpp"
 
 namespace ikk
@@ -8,8 +9,7 @@ namespace ikk
     Button::Button(std::string_view text, Vec2f position, Vec2f size, Degreef rotation, Color color, float radius) noexcept
         : UI(position, size, rotation), m_text(text)
     {
-        for (UIVertex& vertex : this->m_model.getVertexBuffer<UIVertex>())
-            vertex.color = color;
+        this->setColor(color);
 
         Drawable drawable
             {
@@ -17,7 +17,19 @@ namespace ikk
                 UIManager::getInstance().getDefaultShaderProgram(),
                 UIManager::getInstance().getDefaultUICamera()
             };
+
         this->addComponent(std::move(drawable));
+
+        auto lambda = [this]() noexcept
+            {
+                if (this->getState() == Button::State::Pressed && this->m_prevState == Button::State::Pressed)
+                    this->m_state = Button::State::None;
+
+                this->m_prevState = this->getState();
+            };
+        
+        Updateable update{lambda};
+        this->addComponent(std::move(update));
     }
 
     const Button::State& Button::getState() const noexcept

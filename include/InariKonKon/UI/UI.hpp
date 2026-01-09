@@ -11,6 +11,8 @@ namespace ikk
     public:
         virtual ~UI() noexcept;
 
+        virtual void setColor(const Color& color) noexcept final;
+
         const Model& getModel() const noexcept;
     protected:
         [[nodiscard]] UI(Vec2f position, Vec2f size, Degreef rotation) noexcept;

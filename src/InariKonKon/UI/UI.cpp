@@ -14,6 +14,11 @@ namespace ikk
         this->removeComponent<Transform2D>();
     }
 
+    void UI::setColor(const Color& color) noexcept
+    {
+        this->m_model.setColor<UIVertex>(color);
+    }
+
     const Model& UI::getModel() const noexcept
     {
         return this->m_model;

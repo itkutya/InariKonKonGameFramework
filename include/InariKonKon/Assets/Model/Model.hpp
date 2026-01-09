@@ -27,9 +27,13 @@ namespace ikk
 
         ~Model() noexcept = default;
 
+        template<VertexType VertexType> requires (std::is_same<decltype(VertexType::color), Empty>::value == false)
+        void setColor(const Color& color) noexcept;
+        //TODO:
+        //setVertices...
+
         template<VertexType VertexType>
         [[nodiscard]] const std::span<const VertexType> getVertexBuffer() const noexcept;
-
         template<VertexType VertexType>
         [[nodiscard]] const std::span<VertexType> getVertexBuffer() noexcept;
 
@@ -43,6 +47,11 @@ namespace ikk
 
         std::vector<VertexAttribute> m_vertexAttributes = {};
         std::size_t m_vertexStride = 0;
+
+        mutable bool m_dirty = false;
+        //TODO:
+        //Remove.
+        friend class OpenGL;
     };
 
     template<VertexType VertexType>
@@ -55,6 +64,15 @@ namespace ikk
 
         const std::array<VertexAttribute, VertexType::getAttributeCount()>& attributes = VertexType::createAttributes();
         this->m_vertexAttributes = std::vector<VertexAttribute>{ attributes.begin(), attributes.end() };
+    }
+
+    template<VertexType VertexType> requires (std::is_same<decltype(VertexType::color), Empty>::value == false)
+    void Model::setColor(const Color& color) noexcept
+    {
+        auto vertices = this->getVertexBuffer<VertexType>();
+        for (VertexType& vertex : vertices)
+            vertex.color = color;
+        this->m_dirty = true;
     }
 
     template<VertexType VertexType>

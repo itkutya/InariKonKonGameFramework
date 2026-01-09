@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "InariKonKon/ECS/Systems/Updater.hpp"
 #include "InariKonKon/Utility/Log.hpp"
 
 namespace ikk
@@ -56,6 +57,7 @@ namespace ikk
     void Application::update()
     {
         const Time dt = this->m_deltaTime.restart();
+        ECS::update<Updater>();
         std::for_each(this->m_layers.rbegin(), this->m_layers.rend(),
             [&dt](Layer* layer) noexcept
             {

@@ -47,8 +47,8 @@ namespace ikk
     {
         VecType position{};
 
-        [[no_unique_address]] std::conditional_t<HasAttribute<Color, Attributes...>::value, Color, Empty> color{};
-        [[no_unique_address]] std::conditional_t<HasAttribute<TextureCoord, Attributes...>::value, TextureCoord, Empty> texCoord{};
+        [[no_unique_address]] std::conditional<HasAttribute<Color, Attributes...>::value, Color, Empty>::type color{};
+        [[no_unique_address]] std::conditional<HasAttribute<TextureCoord, Attributes...>::value, TextureCoord, Empty>::type texCoord{};
 
         static constexpr std::size_t getAttributeCount() noexcept;
         static constexpr std::size_t getStride() noexcept;
@@ -62,7 +62,7 @@ namespace ikk
     template<VecType VecType, VertexAttributeType... Attributes> requires UniqueAttributes<Attributes...>::value
     constexpr std::size_t VertexBase<VecType, Attributes...>::getAttributeCount() noexcept
     {
-        return 1 + (HasAttribute<Color, Attributes...>::value ? 1 : 0) + (HasAttribute<TextureCoord, Attributes...>::value ? 1 : 0);
+        return 1 + (HasAttribute<Color, Attributes...>::value == true ? 1 : 0) + (HasAttribute<TextureCoord, Attributes...>::value == true ? 1 : 0);
     }
 
     template<VecType VecType, VertexAttributeType... Attributes> requires UniqueAttributes<Attributes...>::value
@@ -83,22 +83,23 @@ namespace ikk
     template<>
     constexpr std::array<VertexAttribute, UIVertex::getAttributeCount()> UIVertex::createAttributes() noexcept
     {
+        using VertexType = UIVertex;
         std::array<VertexAttribute, getAttributeCount()> attributes{};
 
         attributes.at(0).count = 2;
         attributes.at(0).type = VertexAttribute::Type::Float;
         attributes.at(0).normalized = false;
-        attributes.at(0).offset = offsetof(UIVertex, position);
+        attributes.at(0).offset = offsetof(VertexType, position);
         
         attributes.at(1).count = 4;
         attributes.at(1).type = VertexAttribute::Type::UInt8;
         attributes.at(1).normalized = true;
-        attributes.at(1).offset = offsetof(UIVertex, color);
+        attributes.at(1).offset = offsetof(VertexType, color);
 
         attributes.at(2).count = 2;
         attributes.at(2).type = VertexAttribute::Type::Float;
         attributes.at(2).normalized = false;
-        attributes.at(2).offset = offsetof(UIVertex, texCoord);
+        attributes.at(2).offset = offsetof(VertexType, texCoord);
 
         return attributes;
     }
@@ -106,22 +107,23 @@ namespace ikk
     template<>
     constexpr std::array<VertexAttribute, Vertex::getAttributeCount()> Vertex::createAttributes() noexcept
     {
+        using VertexType = Vertex;
         std::array<VertexAttribute, getAttributeCount()> attributes{};
 
         attributes.at(0).count = 3;
         attributes.at(0).type = VertexAttribute::Type::Float;
         attributes.at(0).normalized = 0;
-        attributes.at(0).offset = offsetof(UIVertex, position);
+        attributes.at(0).offset = offsetof(VertexType, position);
         
         attributes.at(1).count = 4;
         attributes.at(1).type = VertexAttribute::Type::UInt8;
         attributes.at(1).normalized = false;
-        attributes.at(1).offset = offsetof(UIVertex, color);
+        attributes.at(1).offset = offsetof(VertexType, color);
 
         attributes.at(2).count = 2;
         attributes.at(2).type = VertexAttribute::Type::Float;
         attributes.at(2).normalized = false;
-        attributes.at(2).offset = offsetof(UIVertex, texCoord);
+        attributes.at(2).offset = offsetof(VertexType, texCoord);
 
         return attributes;
     }

@@ -15,14 +15,10 @@ public:
 
     void onUpdate(const ikk::Time& dt) noexcept override
     {
-        //TODO:
-        //This in the class...
-        static ikk::Button::State btnState = ikk::Button::State::None;
-
-        if (button.getState() == ikk::Button::State::Pressed && btnState == ikk::Button::State::Pressed)
-            button.m_state = ikk::Button::State::None;
-
-        btnState = button.getState();
+        if (button.getState() == ikk::Button::State::Held)
+            button.setColor(ikk::Color::Teto);
+        else
+            button.setColor(ikk::Color::Miku);
     }
 
     void onRender(const ikk::Window& window) const noexcept override
