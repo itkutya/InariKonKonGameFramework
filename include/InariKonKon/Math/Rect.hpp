@@ -38,7 +38,6 @@ namespace ikk
 
         template<Number U>
         [[nodiscard]] constexpr bool contains(Vec2<U> point) const noexcept;
-
         template<Number U>
         [[nodiscard]] constexpr bool contains(Vec2<U> point, Quaternionf rotation, Vec2f anchor = { 0.f, 0.f }) const noexcept;
     private:

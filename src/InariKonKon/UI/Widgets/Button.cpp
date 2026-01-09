@@ -69,7 +69,7 @@ namespace ikk
     void Button::onNotify(const MouseEvent::Move& event) noexcept
     {
         const Transform2D& transform = *this->getComponent<Transform2D>().value();
-        Rectf rect{ transform.getWorldPosition(), transform.getWorldScale() };
+        const Rectf rect{ transform.getWorldPosition(), transform.getWorldScale() };
         this->m_hovered = rect.contains(event.position, transform.getWorldRotation());
 
         if (this->m_hovered == false && this->m_state == State::Held)
