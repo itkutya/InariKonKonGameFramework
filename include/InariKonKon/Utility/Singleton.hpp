@@ -1,5 +1,4 @@
-#ifndef IKK_SINGLETON_HPP
-#define IKK_SINGLETON_HPP
+#pragma once
 
 #include "InariKonKon/Utility/NonCopyable.hpp"
 #include "InariKonKon/Utility/NonMovable.hpp"
@@ -24,5 +23,3 @@ namespace ikk
         return instance;
     }
 }
-
-#endif

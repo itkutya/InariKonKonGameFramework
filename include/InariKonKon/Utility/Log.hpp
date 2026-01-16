@@ -1,5 +1,4 @@
-#ifndef IKK_LOG_HPP
-#define IKK_LOG_HPP
+#pragma once
 
 #include <string_view>
 #include <utility>
@@ -102,12 +101,10 @@ namespace ikk
     {
         return static_cast<Log::Flags>(std::to_underlying(lhs) & std::to_underlying(rhs));
     }
+
+    #ifdef IKK_DEBUG
+        #define DEBUG_LOG(...) [[maybe_unused]] const ikk::Log _{ __VA_ARGS__ }
+    #else
+        #define DEBUG_LOG(...) ((void)0)
+    #endif
 }
-
-#ifdef IKK_DEBUG
-    #define DEBUG_LOG(...) [[maybe_unused]] const ikk::Log _{ __VA_ARGS__ }
-#else
-    #define DEBUG_LOG(...) ((void)0)
-#endif
-
-#endif

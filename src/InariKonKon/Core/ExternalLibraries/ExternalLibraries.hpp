@@ -1,5 +1,4 @@
-#ifndef IKK_EXTERNAL_LIBRARIES_HPP
-#define IKK_EXTERNAL_LIBRARIES_HPP
+#pragma once
 
 #include <expected>
 
@@ -22,5 +21,3 @@ namespace ikk
         friend Singleton<ExternalLibraries>;
     };
 }
-
-#endif

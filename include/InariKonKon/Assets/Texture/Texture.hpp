@@ -1,5 +1,4 @@
-#ifndef IKK_TEXTURE_HPP
-#define IKK_TEXTURE_HPP
+#pragma once
 
 #include <cstddef>
 #include <vector>
@@ -37,5 +36,3 @@ namespace ikk
         std::vector<std::byte> m_buffer{};
     };
 }
-
-#endif

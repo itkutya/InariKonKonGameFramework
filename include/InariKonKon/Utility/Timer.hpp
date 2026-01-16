@@ -1,5 +1,4 @@
-#ifndef IKK_TIMER_HPP
-#define IKK_TIMER_HPP
+#pragma once
 
 #include <string_view>
 
@@ -35,6 +34,4 @@ namespace ikk
     #define PROFILE_FUNCTION(description) [[maybe_unused]] ikk::Profiler::Function _ { description }
 #else
     #define PROFILE_FUNCTION(description) ((void)0)
-#endif
-
 #endif

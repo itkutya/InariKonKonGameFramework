@@ -1,5 +1,4 @@
-#ifndef IKK_CLAMPED_HPP
-#define IKK_CLAMPED_HPP
+#pragma once
 
 #include <algorithm>
 #include <limits>
@@ -313,5 +312,3 @@ namespace ikk
         return OtherRange == 0 ? Min : (((value - OtherMin) * Range) / OtherRange) + Min;
     }
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef IKK_EVENT_LISTENER_HPP
-#define IKK_EVENT_LISTENER_HPP
+#pragma once
 
 #include <algorithm>
 #include <ranges> // IWYU pragma: keep
@@ -73,5 +72,3 @@ namespace ikk
         return s_listeners;
     }
 }
-
-#endif

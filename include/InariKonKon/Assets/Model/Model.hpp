@@ -1,5 +1,4 @@
-#ifndef IKK_MODEL_HPP
-#define IKK_MODEL_HPP
+#pragma once
 
 #include <cstddef>
 #include <cstring>
@@ -87,5 +86,3 @@ namespace ikk
         return std::span<VertexType>{reinterpret_cast<VertexType*>(this->m_vertexBuffer.data()), this->m_vertexBuffer.size() / sizeof(VertexType)};
     }
 }
-
-#endif

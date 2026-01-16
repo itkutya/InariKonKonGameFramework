@@ -1,5 +1,4 @@
-#ifndef IKK_BUTTON_HPP
-#define IKK_BUTTON_HPP
+#pragma once
 
 #include <string>
 
@@ -42,5 +41,3 @@ namespace ikk
         void onNotify(const MouseEvent::Move& event) noexcept override;
     };
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef IKK_MATH_HPP
-#define IKK_MATH_HPP
+#pragma once
 
 #include <type_traits>
 #include <concepts>
@@ -67,5 +66,3 @@ namespace ikk
             return value == T{0};
     }
 }
-
-#endif

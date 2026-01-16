@@ -1,5 +1,4 @@
-#ifndef IKK_NON_CONSTRUCTIBLE_HPP
-#define IKK_NON_CONSTRUCTIBLE_HPP
+#pragma once
 
 #include "InariKonKon/Utility/NonCopyable.hpp"
 #include "InariKonKon/Utility/NonMovable.hpp"
@@ -15,5 +14,3 @@ namespace ikk
     private:
     };
 }
-
-#endif

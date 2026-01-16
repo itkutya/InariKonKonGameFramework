@@ -1,5 +1,4 @@
-#ifndef IKK_VERTEX_HPP
-#define IKK_VERTEX_HPP
+#pragma once
 
 #include "InariKonKon/Utility/Color.hpp"
 #include "InariKonKon/Math/Vec.hpp"
@@ -128,5 +127,3 @@ namespace ikk
         return attributes;
     }
 }
-
-#endif

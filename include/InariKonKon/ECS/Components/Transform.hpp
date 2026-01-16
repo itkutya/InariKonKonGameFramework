@@ -1,5 +1,4 @@
-#ifndef IKK_TRANSFORM_HPP
-#define IKK_TRANSFORM_HPP
+#pragma once
 
 #include "InariKonKon/Utility/NonConstructible.hpp"
 #include "InariKonKon/ECS/Entities/Hierarchy.hpp"
@@ -367,5 +366,3 @@ namespace ikk
         this->m_dirty = false;
     }
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef IKK_HIERACHRY_HPP
-#define IKK_HIERACHRY_HPP
+#pragma once
 
 #include <type_traits>
 #include <vector>
@@ -168,5 +167,3 @@ namespace ikk
         }
     }
 }
-
-#endif

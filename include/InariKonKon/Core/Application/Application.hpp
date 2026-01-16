@@ -1,5 +1,4 @@
-#ifndef IKK_APPLICATION_HPP
-#define IKK_APPLICATION_HPP
+#pragma once
 
 #include "InariKonKon/Core/Window/Window.hpp"
 #include "InariKonKon/Core/Layer/Layer.hpp"
@@ -51,5 +50,3 @@ public:
         return std::format_to(ctx.out(), "ptr: {:#x}", reinterpret_cast<std::uintptr_t>(&application));
     }
 };
-
-#endif

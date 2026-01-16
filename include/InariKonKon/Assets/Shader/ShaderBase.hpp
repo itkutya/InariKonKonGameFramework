@@ -1,5 +1,4 @@
-#ifndef IKK_SHADER_BASE_HPP
-#define IKK_SHADER_BASE_HPP
+#pragma once
 
 #include <string_view>
 #include <cstdint>
@@ -75,5 +74,3 @@ namespace ikk
         }
     }
 }
-
-#endif

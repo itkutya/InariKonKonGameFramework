@@ -1,5 +1,4 @@
-#ifndef IKK_CAMERA_HPP
-#define IKK_CAMERA_HPP
+#pragma once
 
 #include "InariKonKon/ECS/Components/Transform.hpp"
 #include "InariKonKon/ECS/Entities/Entity.hpp"
@@ -103,5 +102,3 @@ namespace ikk
         return result;
     }
 }
-
-#endif

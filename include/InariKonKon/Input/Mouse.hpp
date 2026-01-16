@@ -1,5 +1,4 @@
-#ifndef IKK_MOUSE_HPP
-#define IKK_MOUSE_HPP
+#pragma once
 
 #include <string_view>
 
@@ -73,5 +72,3 @@ namespace ikk
         return "Unknown";
     }
 }
-
-#endif

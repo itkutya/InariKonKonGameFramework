@@ -1,5 +1,4 @@
-#ifndef IKK_ENTITY_HPP
-#define IKK_ENTITY_HPP
+#pragma once
 
 #include <cstdint>
 #include <utility>
@@ -73,5 +72,3 @@ namespace ikk
         ECS::applySystemOnEntity<System>(*this, std::forward<Args>(args)...);
     }
 }
-
-#endif

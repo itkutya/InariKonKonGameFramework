@@ -1,5 +1,4 @@
-#ifndef IKK_ANIMATOR_HPP
-#define IKK_ANIMATOR_HPP
+#pragma once
 
 #include "InariKonKon/ECS/Components/Transform.hpp"
 #include "InariKonKon/Utility/Time.hpp"
@@ -17,5 +16,3 @@ namespace ikk
         void operator()(const Entity& entity, Transform3D& component, const Time& dt) const noexcept;
     };
 }
-
-#endif

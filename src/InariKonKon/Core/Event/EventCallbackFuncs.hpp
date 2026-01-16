@@ -1,5 +1,4 @@
-#ifndef IKK_EVENT_CALLBACK_FUNCS_HPP
-#define IKK_EVENT_CALLBACK_FUNCS_HPP
+#pragma once
 
 #include "InariKonKon/Utility/NonConstructible.hpp"
 #include "InariKonKon/Utility/Utility.hpp"
@@ -57,5 +56,3 @@ namespace ikk
         friend class Window;
     };
 }
-
-#endif

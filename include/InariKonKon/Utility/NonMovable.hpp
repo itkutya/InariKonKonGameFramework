@@ -1,5 +1,4 @@
-#ifndef IKK_NON_MOVABLE_HPP
-#define IKK_NON_MOVABLE_HPP
+#pragma once
 
 namespace ikk
 {
@@ -18,5 +17,3 @@ namespace ikk
     private:
     };
 }
-
-#endif

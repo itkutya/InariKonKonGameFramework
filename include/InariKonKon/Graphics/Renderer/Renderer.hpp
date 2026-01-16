@@ -1,5 +1,4 @@
-#ifndef IKK_RENDERER_HPP
-#define IKK_RENDERER_HPP
+#pragma once
 
 #include "InariKonKon/ECS/Entities/Entity.hpp"
 #include "InariKonKon/Utility/Color.hpp"
@@ -56,5 +55,3 @@ namespace ikk
         }
     }
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef IKK_VIDEO_MODE_HPP
-#define IKK_VIDEO_MODE_HPP
+#pragma once
 
 #include <cstdint>
 #include <format>
@@ -33,5 +32,3 @@ public:
             videomode.width, videomode.height, videomode.refreshRate, videomode.redBits, videomode.greenBits, videomode.blueBits);
     }
 };
-
-#endif

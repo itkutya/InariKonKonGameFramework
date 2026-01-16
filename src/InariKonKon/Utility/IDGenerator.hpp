@@ -1,5 +1,4 @@
-#ifndef IKK_ID_GENERATOR_HPP
-#define IKK_ID_GENERATOR_HPP
+#pragma once
 
 #include <concepts>
 
@@ -15,5 +14,3 @@ namespace ikk
         return ++ID;
     }
 }
-
-#endif

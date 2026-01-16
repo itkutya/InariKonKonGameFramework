@@ -1,5 +1,4 @@
-#ifndef IKK_UI_HPP
-#define IKK_UI_HPP
+#pragma once
 
 #include "InariKonKon/ECS/Entities/Entity.hpp"
 #include "InariKonKon/Assets/Model/Model.hpp"
@@ -39,5 +38,3 @@ namespace ikk
     private:
     };
 }
-
-#endif

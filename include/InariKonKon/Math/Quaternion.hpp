@@ -1,5 +1,4 @@
-#ifndef IKK_QUATERNION_HPP
-#define IKK_QUATERNION_HPP
+#pragma once
 
 #include "InariKonKon/Math/Rotation.hpp"
 #include "InariKonKon/Math/Mat.hpp"
@@ -424,5 +423,3 @@ namespace ikk
     using Quaternionf = Quaternion<float>;
     using Quaterniond = Quaternion<double>;
 }
-
-#endif

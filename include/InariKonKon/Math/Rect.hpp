@@ -1,5 +1,4 @@
-#ifndef IKK_RECT_HPP
-#define IKK_RECT_HPP
+#pragma once
 
 #include "InariKonKon/Math/Quaternion.hpp"
 #include "InariKonKon/Math/Math.hpp"
@@ -162,5 +161,3 @@ namespace ikk
         return localPoint.x() >= minX && localPoint.x() <= maxX && localPoint.y() >= minY && localPoint.y() <= maxY;
     }
 }
-
-#endif

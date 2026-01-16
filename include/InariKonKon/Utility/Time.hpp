@@ -1,5 +1,4 @@
-#ifndef IKK_TIME_HPP
-#define IKK_TIME_HPP
+#pragma once
 
 #include <cstdint>
 #include <chrono>
@@ -79,5 +78,3 @@ namespace ikk
         return Time(std::chrono::microseconds(amount));
     }
 }
-
-#endif

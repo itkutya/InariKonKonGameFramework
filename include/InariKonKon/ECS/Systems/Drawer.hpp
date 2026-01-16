@@ -1,5 +1,4 @@
-#ifndef IKK_DRAWER_HPP
-#define IKK_DRAWER_HPP
+#pragma once
 
 #include "InariKonKon/ECS/Components/Drawable.hpp"
 
@@ -15,5 +14,3 @@ namespace ikk
         void operator()(const Entity& entity, ComponentType& component, const Window& window) const noexcept;
     };
 }
-
-#endif

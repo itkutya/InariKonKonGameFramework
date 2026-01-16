@@ -1,5 +1,4 @@
-#ifndef IKK_INPUT_HPP
-#define IKK_INPUT_HPP
+#pragma once
 
 #include <string_view>
 #include <cstdint>
@@ -40,5 +39,3 @@ namespace ikk
         return "Unknown";
     }
 }
-
-#endif

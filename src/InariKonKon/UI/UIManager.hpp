@@ -1,5 +1,4 @@
-#ifndef IKK_UI_MANAGER_HPP
-#define IKK_UI_MANAGER_HPP
+#pragma once
 
 #include "InariKonKon/Assets/Shader/ShaderProgram.hpp"
 #include "InariKonKon/ECS/Entities/Camera/Camera.hpp"
@@ -96,5 +95,3 @@ namespace ikk
         friend Singleton<UIManager>;
     };
 }
-
-#endif

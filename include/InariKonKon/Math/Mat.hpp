@@ -1,5 +1,4 @@
-#ifndef IKK_MAT_HPP
-#define IKK_MAT_HPP
+#pragma once
 
 #include "InariKonKon/Math/Vec.hpp"
 
@@ -415,5 +414,3 @@ namespace ikk
             (*this)(r, column) = data[r];
     }
 }
-
-#endif

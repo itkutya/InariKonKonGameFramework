@@ -1,5 +1,4 @@
-#ifndef IKK_UTILITY_HPP
-#define IKK_UTILITY_HPP
+#pragma once
 
 #include <concepts>
 #include <cstdint>
@@ -160,5 +159,3 @@ namespace ikk
         return result;
     }
 }
-
-#endif

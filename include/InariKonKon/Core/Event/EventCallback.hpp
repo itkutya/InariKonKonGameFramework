@@ -1,5 +1,4 @@
-#ifndef IKK_EVENT_CALLBACK_HPP
-#define IKK_EVENT_CALLBACK_HPP
+#pragma once
 
 #include <type_traits>
 #include <vector>
@@ -43,5 +42,3 @@ namespace ikk
         return s_eventCallabacks;
     }
 }
-
-#endif

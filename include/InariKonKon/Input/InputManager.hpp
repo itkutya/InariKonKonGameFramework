@@ -1,5 +1,4 @@
-#ifndef IKK_INPUT_MANAGER_HPP
-#define IKK_INPUT_MANAGER_HPP
+#pragma once
 
 #include <vector>
 
@@ -47,5 +46,3 @@ namespace ikk
         friend class Window;
     };
 }
-
-#endif

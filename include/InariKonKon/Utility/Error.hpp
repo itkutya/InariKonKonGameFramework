@@ -1,5 +1,4 @@
-#ifndef IKK_ERROR_HPP
-#define IKK_ERROR_HPP
+#pragma once
 
 #include <string_view>
 
@@ -31,5 +30,3 @@ namespace ikk
         return this->m_description;
     }
 }
-
-#endif

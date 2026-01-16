@@ -1,5 +1,4 @@
-#ifndef IKK_VEC_HPP
-#define IKK_VEC_HPP
+#pragma once
 
 #include <initializer_list>
 #include <algorithm>
@@ -867,5 +866,3 @@ public:
         return std::format_to(ctx.out(), "x: {}, y: {}, z: {}, w: {}", vec.x(), vec.y(), vec.z(), vec.w());
     }
 };
-
-#endif

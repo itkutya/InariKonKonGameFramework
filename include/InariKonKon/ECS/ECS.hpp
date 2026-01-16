@@ -1,5 +1,4 @@
-#ifndef IKK_ECS_HPP
-#define IKK_ECS_HPP
+#pragma once
 
 #include <algorithm>
 #include <expected>
@@ -145,5 +144,3 @@ namespace ikk
         return instance;
     }
 }
-
-#endif

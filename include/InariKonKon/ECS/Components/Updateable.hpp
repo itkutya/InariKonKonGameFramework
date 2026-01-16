@@ -1,5 +1,4 @@
-#ifndef IKK_UPDATEABLE_HPP
-#define IKK_UPDATEABLE_HPP
+#pragma once
 
 #include <functional>
 
@@ -23,5 +22,3 @@ namespace ikk
         std::function<void()> m_callback;
     };
 }
-
-#endif

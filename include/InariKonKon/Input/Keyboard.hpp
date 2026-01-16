@@ -1,5 +1,4 @@
-#ifndef IKK_KEYBOARD_HPP
-#define IKK_KEYBOARD_HPP
+#pragma once
 
 #include <cstdint>
 #include <string_view>
@@ -277,5 +276,3 @@ namespace ikk
         return "Unknown";
     }
 }
-
-#endif

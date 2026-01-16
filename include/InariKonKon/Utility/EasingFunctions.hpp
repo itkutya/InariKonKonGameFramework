@@ -1,5 +1,4 @@
-#ifndef IKK_EASING_FUNCS
-#define IKK_EASING_FUNCS
+#pragma once
 
 #include <concepts>
 #include <numbers>
@@ -245,5 +244,3 @@ namespace ikk
         };
     };
 }
-
-#endif

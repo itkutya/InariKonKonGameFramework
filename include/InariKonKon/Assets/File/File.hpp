@@ -1,5 +1,4 @@
-#ifndef IKK_FILE_HPP
-#define IKK_FILE_HPP
+#pragma once
 
 #include <filesystem>
 
@@ -23,5 +22,3 @@ namespace ikk
         std::filesystem::path m_path;
     };
 }
-
-#endif

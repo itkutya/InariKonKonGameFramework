@@ -1,5 +1,4 @@
-#ifndef IKK_JOYSTICK_HPP
-#define IKK_JOYSTICK_HPP
+#pragma once
 
 #include <string_view>
 #include <cstdint>
@@ -142,5 +141,3 @@ namespace ikk
         return static_cast<Joystick::Hat>(std::to_underlying(lhs) & std::to_underlying(rhs));
     }
 }
-
-#endif

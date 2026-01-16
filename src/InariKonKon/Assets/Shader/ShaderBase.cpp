@@ -1,6 +1,7 @@
 #include "InariKonKon/Assets/Shader/ShaderBase.hpp"
 
 #include "InariKonKon/Core/ExternalLibraries/OpenGL.hpp"
+#include "InariKonKon/Utility/Log.hpp"
 
 namespace ikk
 {

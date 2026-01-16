@@ -1,5 +1,4 @@
-#ifndef IKK_FONT_HPP
-#define IKK_FONT_HPP
+#pragma once
 
 #include <unordered_map>
 
@@ -46,5 +45,3 @@ namespace ikk
         Atlas m_atlas{};
     };
 }
-
-#endif

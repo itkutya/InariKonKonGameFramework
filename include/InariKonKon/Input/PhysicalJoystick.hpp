@@ -1,5 +1,4 @@
-#ifndef IKK_PHYSICAL_JOYSTICK_HPP
-#define IKK_PHYSICAL_JOYSTICK_HPP
+#pragma once
 
 #include <string_view>
 #include <cstdint>
@@ -50,5 +49,3 @@ namespace ikk
         friend class InputManager;
     };
 }
-
-#endif

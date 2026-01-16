@@ -1,5 +1,4 @@
-#ifndef IKK_OPENGL_HPP
-#define IKK_OPENGL_HPP
+#pragma once
 
 #include <utility>
 
@@ -63,5 +62,3 @@ namespace ikk
         };
     }
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef IKK_EVENT_HPP
-#define IKK_EVENT_HPP
+#pragma once
 
 #include <type_traits>
 #include <filesystem>
@@ -300,5 +299,3 @@ namespace ikk
     using MouseEvent        = Event::Input::Mouse;
     using JoystickEvent     = Event::Input::Joystick;
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef IKK_ROTATION_HPP
-#define IKK_ROTATION_HPP
+#pragma once
 
 #include "InariKonKon/Math/Math.hpp"
 
@@ -24,5 +23,3 @@ namespace ikk
     using RotationRadf = RotationRad<float>;
     using RotationRadd = RotationRad<double>;
 }
-
-#endif

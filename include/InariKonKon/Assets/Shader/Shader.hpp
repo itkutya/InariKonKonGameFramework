@@ -1,5 +1,4 @@
-#ifndef IKK_SHADER_HPP
-#define IKK_SHADER_HPP
+#pragma once
 
 #include "InariKonKon/Assets/Shader/ShaderBase.hpp"
 
@@ -31,5 +30,3 @@ namespace ikk
     {
     }
 }
-
-#endif

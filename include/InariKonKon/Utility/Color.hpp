@@ -1,5 +1,4 @@
-#ifndef IKK_COLOR_HPP
-#define IKK_COLOR_HPP
+#pragma once
 
 #include <format>
 
@@ -154,5 +153,3 @@ public:
         return std::format_to(ctx.out(), "r: {}\n\tg: {}\n\tb: {}\n\ta: {}", color.r, color.b, color.b, color.a);
     }
 };
-
-#endif

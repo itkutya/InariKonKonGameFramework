@@ -1,5 +1,4 @@
-#ifndef IKK_DRAWABLE_HPP
-#define IKK_DRAWABLE_HPP
+#pragma once
 
 #include "InariKonKon/Assets/Shader/ShaderProgram.hpp"
 #include "InariKonKon/ECS/Entities/Camera/Camera.hpp"
@@ -38,5 +37,3 @@ namespace ikk
         const Model* m_model = nullptr;
     };
 }
-
-#endif

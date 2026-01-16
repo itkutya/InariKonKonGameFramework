@@ -1,5 +1,4 @@
-#ifndef IKK_WINDOW_HPP
-#define IKK_WINDOW_HPP
+#pragma once
 
 #include <expected>
 #include <memory>
@@ -112,5 +111,3 @@ public:
             reinterpret_cast<std::uintptr_t>(&window), window.getSettings());
     }
 };
-
-#endif

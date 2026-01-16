@@ -1,5 +1,4 @@
-#ifndef IKK_LAYERS_HPP
-#define IKK_LAYERS_HPP
+#pragma once
 
 #include <type_traits>
 #include <cstdint>
@@ -58,5 +57,3 @@ public:
         return std::format_to(ctx.out(), "id: {}", layer.getID());
     }
 };
-
-#endif

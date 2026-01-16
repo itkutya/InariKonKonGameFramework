@@ -1,5 +1,4 @@
-#ifndef IKK_UPDATER_HPP
-#define IKK_UPDATER_HPP
+#pragma once
 
 #include "InariKonKon/ECS/Components/Updateable.hpp"
 
@@ -14,5 +13,3 @@ namespace ikk
         void operator()(const Entity& entity, ComponentType& component) const noexcept;
     };
 }
-
-#endif

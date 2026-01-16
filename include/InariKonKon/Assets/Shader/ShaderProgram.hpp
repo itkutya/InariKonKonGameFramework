@@ -1,5 +1,4 @@
-#ifndef IKK_SHADER_PROGRAM_HPP
-#define IKK_SHADER_PROGRAM_HPP
+#pragma once
 
 #include "InariKonKon/Assets/Shader/Shader.hpp"
 #include "InariKonKon/Utility/Color.hpp"
@@ -37,5 +36,3 @@ namespace ikk
         const FragmentShader* m_fragmentShader = nullptr;
     };
 }
-
-#endif

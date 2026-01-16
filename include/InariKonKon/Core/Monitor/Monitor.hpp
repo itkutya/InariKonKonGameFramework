@@ -1,5 +1,4 @@
-#ifndef IKK_MONITOR_HPP
-#define IKK_MONITOR_HPP
+#pragma once
 
 #include <string_view>
 #include <cstddef>
@@ -42,5 +41,3 @@ namespace ikk
         void initializeMonitor(GLFWmonitor* monitor) noexcept;
     };
 }
-
-#endif
