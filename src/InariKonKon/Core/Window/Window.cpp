@@ -176,6 +176,8 @@ namespace ikk
         if (glfwRawMouseMotionSupported() && this->m_settings.enableRawMouseInput)
             glfwSetInputMode(this->m_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 
+        //glfwSwapInterval(0);
+
 #ifdef IKK_DEBUG
         glfwSetErrorCallback(EventCallbackFuncs::errorCallback);
 #endif

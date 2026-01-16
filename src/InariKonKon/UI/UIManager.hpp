@@ -83,6 +83,8 @@ namespace ikk
                         float dist = length(fragPos - inner);
                         float alpha = 1.0 - smoothstep(radius - 0.01, radius + 0.01, dist);
 
+                        if (alpha < 0.05) discard;
+
                         color = vec4(fragColor.rgb, fragColor.a * alpha);
                     }
                     )"

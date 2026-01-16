@@ -164,7 +164,7 @@ namespace ikk
     {
         if (Window* windowPtr = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window)); windowPtr != nullptr)
         {
-            static const auto convertUnicodeToUTF8 = [](std::uint32_t codepoint) noexcept
+            static const auto convertCodepointToString = [](std::uint32_t codepoint) noexcept
             {
                 std::string out;
                 if (codepoint <= 0x7f)
@@ -191,7 +191,7 @@ namespace ikk
             };
 
             windowPtr->m_eventStack.emplace(Event::Input::Text{ .unicode = codepoint });
-            DEBUG_LOG("Text entered:\n\tUTF8: {}", convertUnicodeToUTF8(codepoint));
+            DEBUG_LOG("Text entered:\n\tUTF8: {}", convertCodepointToString(codepoint));
         }
     }
 

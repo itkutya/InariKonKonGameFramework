@@ -11,6 +11,7 @@ namespace ikk
     class [[nodiscard]] Rect final
     {
     public:
+        [[nodiscard]] constexpr Rect() noexcept = default;
         [[nodiscard]] constexpr Rect(T left, T top, T width, T height) noexcept;
         [[nodiscard]] constexpr Rect(Vec2<T> position, Vec2<T> size) noexcept;
         [[nodiscard]] constexpr Rect(Vec4<T> vec) noexcept;

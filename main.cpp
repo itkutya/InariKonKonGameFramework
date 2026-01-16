@@ -1,12 +1,14 @@
 #include "InariKonKon/InariKonKon.hpp"
 
 #include "InariKonKon/UI/Widgets/Button.hpp"
+#include "InariKonKon/Assets/Font/Font.hpp"
 
 class MainMenu final : public ikk::Layer
 {
 public:
     MainMenu() noexcept
     {
+        ikk::Font font{ikk::File{"/home/itkutya/Documents/c++/InariKonKon/resources/Ubuntu-Regular.ttf"}, 32};
     }
 
     void onEvent(const ikk::Event& event) noexcept override

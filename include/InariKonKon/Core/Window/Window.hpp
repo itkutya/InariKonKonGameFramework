@@ -92,7 +92,7 @@ public:
     constexpr auto format(const ikk::Window::Settings& settings, std::format_context& ctx) const noexcept
     {
         return std::format_to(ctx.out(), "renderer type: {}\n\ttitle: {}\n\tvideomode: {}\n\tfullscreen: {}\n\traw input: {}\n\tclear color: {}",
-            ikk::Renderer::convertToString(settings.renderer), TO_ANSI(settings.title.data()), settings.videomode,
+            ikk::Renderer::convertToString(settings.renderer), ikk::TO_ANSI(settings.title.data()), settings.videomode,
             settings.fullscreen, settings.enableRawMouseInput, settings.clearColor);
     }
 };

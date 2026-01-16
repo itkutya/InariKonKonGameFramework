@@ -19,6 +19,15 @@ glad_add_library(vulkan STATIC API vulkan=1.4)
 FetchContent_Declare(nlohmann_json GIT_REPOSITORY https://github.com/nlohmann/json.git GIT_TAG master)
 FetchContent_MakeAvailable(nlohmann_json)
 
+FetchContent_Declare(freetype GIT_REPOSITORY https://github.com/freetype/freetype.git GIT_TAG master)
+FetchContent_MakeAvailable(freetype)
+
+FetchContent_Declare(stb GIT_REPOSITORY https://github.com/nothings/stb.git GIT_TAG master)
+FetchContent_MakeAvailable(stb)
+
+add_library(stb_image INTERFACE)
+target_include_directories(stb_image INTERFACE ${stb_SOURCE_DIR})
+
 set(INARIKONKON_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(INARIKONKON_SOURCES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
@@ -26,7 +35,7 @@ file(GLOB_RECURSE INARIKONKON_SOURCE_FILES CONFIGURE_DEPENDS "${INARIKONKON_SOUR
 
 add_library(${CMAKE_PROJECT_NAME} STATIC ${INARIKONKON_SOURCE_FILES})
 
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE glfw opengl vulkan nlohmann_json::nlohmann_json)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE glfw opengl vulkan nlohmann_json::nlohmann_json freetype stb_image)
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${INARIKONKON_SOURCES_DIR})
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${INARIKONKON_INCLUDE_DIR})
