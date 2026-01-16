@@ -9,10 +9,10 @@
 
 #include "InariKonKon/Utility/Utility.hpp"
 
-#include "InariKonKon/Core/ExternalLibraries/OpenGL.hpp" // IWYU pragma: keep
-
 namespace ikk
 {
+    //TODO:
+    //Async...
     Font::Font(const File& path, std::uint32_t fontSize) noexcept
         : m_fontSize(fontSize)
     {
@@ -32,6 +32,7 @@ namespace ikk
 
         static constexpr std::uint32_t maxTextureWidth = 1024;
         static constexpr std::uint32_t padding = 5u;
+        static constexpr std::uint32_t bytesPerPixel = 1u;
 
         float penX = 0.0f;
         float penY = 0.0f;
@@ -76,9 +77,7 @@ namespace ikk
         this->m_atlas.width  = U32(std::max(maxRowWidth, penX));
         this->m_atlas.height = U32(penY + rowHeight);
 
-        this->m_atlas.texture.create(this->m_atlas.width, this->m_atlas.height, 1);
-        std::vector<std::byte>& buffer = this->m_atlas.texture.getBuffer();
-
+        std::vector<std::byte> buffer = std::vector<std::byte>(this->m_atlas.width * this->m_atlas.height * bytesPerPixel, std::byte{0});
         for (auto& [key, glyph] : this->m_atlas.glyphs)
         {
             const FT_UInt index = FT_Get_Char_Index(face, key);
@@ -109,6 +108,9 @@ namespace ikk
             glyph.textureRect.getWidth()  /= F32(this->m_atlas.width);
             glyph.textureRect.getHeight() /= F32(this->m_atlas.height);
         }
+
+        this->m_atlas.texture.create(this->m_atlas.width, this->m_atlas.height, bytesPerPixel);
+        this->m_atlas.texture.load(buffer);
 
         FT_Done_Face(face);
         FT_Done_FreeType(library);

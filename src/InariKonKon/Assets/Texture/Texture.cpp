@@ -4,7 +4,7 @@ namespace ikk
 {
     Texture::Texture(const File& path) noexcept
     {
-        
+        //TODO:
     }
 
     Texture::Texture(std::uint32_t width, std::uint32_t height, std::uint32_t bytesPerPixel, const std::vector<std::byte>& buffer) noexcept
@@ -18,7 +18,7 @@ namespace ikk
         this->m_height = height;
         this->m_bytesPerPixel = bytesPerPixel;
 
-        this->m_buffer.resize(this->m_width * this->m_height * this->m_bytesPerPixel);
+        this->m_buffer.resize(this->m_width * this->m_height * this->m_bytesPerPixel, std::byte{0});
     }
 
     void Texture::load(const File& path) noexcept
@@ -29,18 +29,13 @@ namespace ikk
 
     void Texture::load(const std::vector<std::byte>& buffer) noexcept
     {
-        if (this->m_width * this->m_height != buffer.size())
+        if (this->m_width * this->m_height * this->m_bytesPerPixel != buffer.size())
             return;
 
         this->m_buffer = buffer;
     }
 
     const std::vector<std::byte>& Texture::getBuffer() const noexcept
-    {
-        return this->m_buffer;
-    }
-
-    std::vector<std::byte>& Texture::getBuffer() noexcept
     {
         return this->m_buffer;
     }

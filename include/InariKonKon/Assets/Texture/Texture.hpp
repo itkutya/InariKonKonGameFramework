@@ -29,7 +29,6 @@ namespace ikk
         void load(const std::vector<std::byte>& buffer) noexcept;
 
         const std::vector<std::byte>& getBuffer() const noexcept;
-        std::vector<std::byte>& getBuffer() noexcept;
     private:
         std::uint32_t m_width = 0;
         std::uint32_t m_height = 0;
