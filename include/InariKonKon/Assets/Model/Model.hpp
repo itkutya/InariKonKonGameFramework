@@ -13,7 +13,7 @@ namespace ikk
     {
     public:
         template<VertexType VertexType>
-        [[nodiscard]] Model(const std::vector<VertexType>& vertices, const std::vector<std::uint32_t>& indices) noexcept;
+        [[nodiscard]] Model(const std::vector<VertexType>& vertices, const std::vector<std::uint32_t>& indices = {}) noexcept;
 
         //TODO:
         //Load from file constructor...
@@ -40,6 +40,14 @@ namespace ikk
         [[nodiscard]] const std::vector<std::byte>& getRawVertexBuffer() const noexcept;
         [[nodiscard]] const std::vector<std::uint32_t>& getIndices() const noexcept;
         [[nodiscard]] std::size_t getVertexStride() const noexcept;
+
+        const bool isDirty() const noexcept;
+        void setDirty(bool dirty) const noexcept; //TODO: might not want to do this...
+
+        template<VertexType VertexType>
+        static const Model Triangle;
+        template<VertexType VertexType>
+        static const Model Square;
     private:
         std::vector<std::byte> m_vertexBuffer = {};
         std::vector<std::uint32_t> m_indices = {};
@@ -48,9 +56,6 @@ namespace ikk
         std::size_t m_vertexStride = 0;
 
         mutable bool m_dirty = false;
-        //TODO:
-        //Remove.
-        friend class OpenGL;
     };
 
     template<VertexType VertexType>
@@ -85,4 +90,11 @@ namespace ikk
     {
         return std::span<VertexType>{reinterpret_cast<VertexType*>(this->m_vertexBuffer.data()), this->m_vertexBuffer.size() / sizeof(VertexType)};
     }
+
+    template<VertexType VertexType>
+    inline const Model Model::Triangle{ std::vector<VertexType>{{{ -1.f, 0.f }}, {{ 0.f, 1.f }}, {{ 1.f, 0.f }}}};
+    template<VertexType VertexType>
+    inline const Model Model::Square{
+        std::vector<VertexType>{{{ 0.f, 0.f }}, {{ 0.f, 1.f }}, {{ 1.f, 0.f }}, {{ 1.f, 1.f }}},
+        std::vector<std::uint32_t>{0, 1, 2, 2, 1, 3 }};
 }

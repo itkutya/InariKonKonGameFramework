@@ -4,9 +4,9 @@
 
 namespace ikk
 {
-    UI::UI(Vec2f position, Vec2f size, Degreef rotation) noexcept
+    UI::UI(const Data& data) noexcept
     {
-        this->addComponent(Transform2D{ position, {0.f, 0.f, rotation}, size });
+        this->addComponent(Transform2D{ data.position, { 0.f, 0.f, data.rotation }, data.size });
     }
 
     UI::~UI() noexcept
@@ -14,13 +14,28 @@ namespace ikk
         this->removeComponent<Transform2D>();
     }
 
-    void UI::setColor(const Color& color) noexcept
+    const Transform2D& UI::getTransform() const noexcept
     {
-        this->m_model.setColor<UIVertex>(color);
+        return *this->getComponent<Transform2D>().value();
     }
 
-    const Model& UI::getModel() const noexcept
+    Transform2D& UI::getTransform() noexcept
     {
-        return this->m_model;
+        return *this->getComponent<Transform2D>().value();
+    }
+
+    void UI::setPosition(Vec2f position) noexcept
+    {
+        //TODO:
+    }
+
+    void UI::setSize(Vec2f size) noexcept
+    {
+        this->getTransform().setWorldScale(size);
+    }
+
+    void UI::setRotation(RotationDegf rotation) noexcept
+    {
+        //TODO:
     }
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+//#include "InariKonKon/Assets/Texture/Texture.hpp"
 #include "InariKonKon/Assets/Shader/Shader.hpp"
 #include "InariKonKon/Utility/Color.hpp"
 #include "InariKonKon/Math/Mat.hpp"
@@ -27,6 +28,9 @@ namespace ikk
         void setUniform(std::string_view name, const Mat3x3f& value) const noexcept;
         void setUniform(std::string_view name, const Mat4x4f& value) const noexcept;
         void setUniform(std::string_view name, const Color& value) const noexcept;
+
+        //TODO:
+        //void setUniform(std::string_view name, const Texture& value) const noexcept;
 
         void activate() const noexcept;
     protected:

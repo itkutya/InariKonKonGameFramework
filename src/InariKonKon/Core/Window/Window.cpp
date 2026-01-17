@@ -12,7 +12,6 @@
 
 #include "InariKonKon/Input/InputManager.hpp"
 
-#include "InariKonKon/UI/UIManager.hpp"
 #include "InariKonKon/Utility/Log.hpp"
 
 namespace ikk

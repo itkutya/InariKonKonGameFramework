@@ -3,14 +3,13 @@
 #include <string>
 
 #include "InariKonKon/Core/Event/EventListener.hpp"
-#include "InariKonKon/Utility/Color.hpp"
-#include "InariKonKon/UI/UI.hpp"
+#include "InariKonKon/UI/Widgets/Widget.hpp"
 
 namespace ikk
 {
     class Window;
 
-    class [[nodiscard]] Button final : public UI, public EventListener<MouseEvent::Button>, public EventListener<MouseEvent::Move>
+    class [[nodiscard]] Button final : public Widget, public EventListener<MouseEvent::Button>, public EventListener<MouseEvent::Move>
     {
     public:
         enum struct State : std::uint8_t
@@ -18,7 +17,7 @@ namespace ikk
             Pressed, Held, Withheld, None
         };
 
-        [[nodiscard]] Button(std::string_view text, Vec2f position = {}, Vec2f size = { 1, 1 }, Degreef rotation = {}, Color color = Color::White, float radius = 0.0f) noexcept;
+        [[nodiscard]] Button(std::string_view text, Vec2f position = {}, Vec2f size = { 1, 1 }, Degreef rotation = {}, Color color = Color::White, float cornerRadius = 0.0f) noexcept;
 
         Button(const Button&) noexcept = default;
         Button(Button&&) noexcept = default;

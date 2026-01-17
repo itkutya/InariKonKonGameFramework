@@ -135,7 +135,7 @@ namespace ikk
                 GL_UNSIGNED_BYTE,
                 &texture->getBuffer().at(0)
             );
-            // set texture options
+
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -190,17 +190,18 @@ namespace ikk
         const ShaderProgram& shader = drawable->getShaderProgram();
         const Model& model = drawable->getModel();
 
-        if (model.m_dirty == true)
+        if (model.isDirty() == true)
         {
             const std::vector<std::byte>& vertices = model.getRawVertexBuffer();
             glCheck(glBindBuffer(GL_ARRAY_BUFFER, it->second.VBO));
             glCheck(glBufferData(GL_ARRAY_BUFFER, vertices.size(), &vertices.at(0), GL_DYNAMIC_DRAW));
-            model.m_dirty = false;
+            model.setDirty(false);
         }
 
         shader.activate();
 
         //
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, it->second.textureID);
         //
 
@@ -215,44 +216,6 @@ namespace ikk
             glCheck(glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0));
         }
     }
-
-    /*
-    void OpenGL::drawOutline(const Entity& entity) const noexcept
-    {
-        const auto it = std::find_if(this->m_objects.begin(), this->m_objects.end(), this->matchEntity(entity));
-
-        if (it == this->m_objects.end())
-            return;
-
-        glCheck(glStencilFunc(GL_ALWAYS, 1, 0xFF));
-        glCheck(glStencilMask(0xFF));
-
-        const Drawable* drawable = entity.getComponent<Drawable>().value();
-        const std::vector<std::uint32_t>& indices = drawable->getModel().getIndices();
-        const ShaderProgram& shader = drawable->getShaderProgram();
-
-        shader.activate();
-        glCheck(glBindVertexArray(it->second.VAO));
-
-        glCheck(glStencilFunc(GL_NOTEQUAL, 1, 0xFF));
-        glCheck(glStencilMask(0x00));
-        glCheck(glDisable(GL_DEPTH_TEST))
-
-        if (indices.empty() == true)
-        {
-            const std::size_t verticesCount = drawable->getModel().getRawVertexBuffer().size() / drawable->getModel().getVertexStride();
-            glCheck(glDrawArrays(GL_TRIANGLES, 0, verticesCount));
-        }
-        else
-        {
-            glCheck(glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0));
-        }
-
-        glCheck(glStencilFunc(GL_ALWAYS, 1, 0xFF));
-        glCheck(glStencilMask(0xFF));
-        glCheck(glEnable(GL_DEPTH_TEST));
-    }
-    */
 
     void OpenGL::newFrame(const Color& color) const noexcept
     {

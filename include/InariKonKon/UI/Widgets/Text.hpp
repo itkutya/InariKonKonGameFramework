@@ -1,11 +1,11 @@
 #pragma once
 
+#include "InariKonKon/UI/Widgets/Widget.hpp"
 #include "InariKonKon/Assets/Font/Font.hpp"
-#include "InariKonKon/UI/UI.hpp"
 
 namespace ikk
 {
-    class [[nodiscard]] Text final : public UI
+    class [[nodiscard]] Text final : public Widget
     {
     public:
         Text(const Font& font, std::u32string_view text, Vec2f position = {}, Vec2f scale = { 1.f, 1.f }, Degreef rotation = {}, Color color = Color::White) noexcept;

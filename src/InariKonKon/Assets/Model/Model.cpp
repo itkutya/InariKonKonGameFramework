@@ -21,4 +21,14 @@ namespace ikk
     {
         return this->m_vertexStride;
     }
+
+    const bool Model::isDirty() const noexcept
+    {
+        return this->m_dirty;
+    }
+
+    void Model::setDirty(bool dirty) const noexcept
+    {
+        this->m_dirty = dirty;
+    }
 }
