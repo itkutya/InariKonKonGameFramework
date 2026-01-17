@@ -1,9 +1,10 @@
 #include "InariKonKon/ECS/Components/Drawable.hpp"
+#include "InariKonKon/Assets/Texture/Texture.hpp"
 
 namespace ikk
 {
-    Drawable::Drawable(const Model& model, const ShaderProgram& shaderProgram, const Camera& camera) noexcept
-        : m_model(&model), m_shaderProgram(&shaderProgram), m_camera(&camera)
+    Drawable::Drawable(const Model& model, const ShaderProgram& shaderProgram, const Camera& camera, const Texture* texture) noexcept
+        : m_model(&model), m_shaderProgram(&shaderProgram), m_camera(&camera), m_texture(texture)
     {
     }
 
@@ -30,5 +31,10 @@ namespace ikk
     const Camera& Drawable::getCamera() const noexcept
     {
         return *this->m_camera;
+    }
+
+    const Texture* Drawable::getTexture() const noexcept
+    {
+        return this->m_texture;
     }
 }

@@ -2,6 +2,7 @@
 
 #include "InariKonKon/Assets/Shader/ShaderProgram.hpp"
 #include "InariKonKon/ECS/Entities/Camera/Camera.hpp"
+#include "InariKonKon/Assets/Texture/Texture.hpp"
 #include "InariKonKon/Assets/Model/Model.hpp"
 
 namespace ikk
@@ -12,7 +13,7 @@ namespace ikk
         //TODO:
         //Type
 
-        [[nodiscard]] Drawable(const Model& model, const ShaderProgram& shaderProgram, const Camera& camera) noexcept;
+        [[nodiscard]] Drawable(const Model& model, const ShaderProgram& shaderProgram, const Camera& camera, const Texture* texture = nullptr) noexcept;
 
         Drawable(const Drawable& other) noexcept = default;
         Drawable(Drawable&& other) noexcept = default;
@@ -29,11 +30,14 @@ namespace ikk
         const Model& getModel() const noexcept;
         const ShaderProgram& getShaderProgram() const noexcept;
         const Camera& getCamera() const noexcept;
+
+        const Texture* getTexture() const noexcept;
     private:
         bool m_disabled = true;
         
         const ShaderProgram* m_shaderProgram = nullptr;
         const Camera* m_camera = nullptr;
         const Model* m_model = nullptr;
+        const Texture* m_texture = nullptr;
     };
 }

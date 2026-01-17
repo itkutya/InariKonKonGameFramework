@@ -39,6 +39,8 @@ namespace ikk
         Font& operator=(Font&&) noexcept = default;
 
         ~Font() noexcept = default;
+
+        const Atlas& getAtlas() const noexcept;
     private:
         std::uint32_t m_fontSize = 0;
 

@@ -1,6 +1,5 @@
 #include "InariKonKon/Graphics/Renderer/OpenGL/OpenGL.hpp"
 
-#include "InariKonKon/Assets/Shader/ShaderProgram.hpp"
 #include "InariKonKon/Core/ExternalLibraries/OpenGL.hpp"
 #include "InariKonKon/Core/ExternalLibraries/GLFW.hpp" // IWYU pragma: keep
 
@@ -72,22 +71,14 @@ namespace ikk
             {
                 switch (type)
                 {
-                case VertexAttribute::Type::Float:
-                    return GL_FLOAT;
-                case VertexAttribute::Type::Double:
-                    return GL_DOUBLE;
-                case VertexAttribute::Type::Int8:
-                    return GL_BYTE;
-                case VertexAttribute::Type::UInt8:
-                    return GL_UNSIGNED_BYTE;
-                case VertexAttribute::Type::Int16:
-                    return GL_SHORT;
-                case VertexAttribute::Type::UInt16:
-                    return GL_UNSIGNED_SHORT;
-                case VertexAttribute::Type::Int32:
-                    return GL_INT;
-                case VertexAttribute::Type::UInt32:
-                    return GL_UNSIGNED_INT;
+                case VertexAttribute::Type::Float:  return GL_FLOAT;
+                case VertexAttribute::Type::Double: return GL_DOUBLE;
+                case VertexAttribute::Type::Int8:   return GL_BYTE;
+                case VertexAttribute::Type::UInt8:  return GL_UNSIGNED_BYTE;
+                case VertexAttribute::Type::Int16:  return GL_SHORT;
+                case VertexAttribute::Type::UInt16: return GL_UNSIGNED_SHORT;
+                case VertexAttribute::Type::Int32:  return GL_INT;
+                case VertexAttribute::Type::UInt32: return GL_UNSIGNED_INT;
                 }
                 return 0;
             };
@@ -125,6 +116,30 @@ namespace ikk
             object.ignoreZ = true;
 
             this->m_ubos.emplace_back(&camera, std::move(object));
+        }
+
+        const Texture* texture = drawable->getTexture();
+        if (texture != nullptr)
+        {
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+            glGenTextures(1, &temp.textureID);
+            glBindTexture(GL_TEXTURE_2D, temp.textureID);
+            glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                GL_RED,
+                texture->getWidth(),
+                texture->getHeight(),
+                0,
+                GL_RED,
+                GL_UNSIGNED_BYTE,
+                &texture->getBuffer().at(0)
+            );
+            // set texture options
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         }
 
         this->m_objects.emplace_back(&entity, std::move(temp));
@@ -184,6 +199,11 @@ namespace ikk
         }
 
         shader.activate();
+
+        //
+        glBindTexture(GL_TEXTURE_2D, it->second.textureID);
+        //
+
         glCheck(glBindVertexArray(it->second.VAO));
         if (indices.empty() == true)
         {

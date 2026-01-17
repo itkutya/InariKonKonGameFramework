@@ -16,6 +16,8 @@ namespace ikk
             std::uint32_t VAO = 0;
             std::uint32_t VBO = 0;
             std::uint32_t EBO = 0;
+
+            std::uint32_t textureID = 0;
         };
 
         struct CameraUniformBufferObject

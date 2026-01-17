@@ -39,4 +39,19 @@ namespace ikk
     {
         return this->m_buffer;
     }
+
+    const std::uint32_t Texture::getWidth() const noexcept
+    {
+        return this->m_width;
+    }
+
+    const std::uint32_t Texture::getHeight() const noexcept
+    {
+        return this->m_height;
+    }
+
+    const std::uint32_t Texture::getBytesPerPixel() const noexcept
+    {
+        return this->m_bytesPerPixel;
+    }
 }

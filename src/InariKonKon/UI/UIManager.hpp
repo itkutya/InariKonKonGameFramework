@@ -34,6 +34,9 @@ namespace ikk
                     layout(location = 1) in vec4 color;
                     layout(location = 2) in vec2 texCoord;
 
+                    out vec4 fragColor;
+                    out vec2 fragTexCoord;
+
                     uniform mat3 model;
 
                     layout (std140, binding = 0) uniform CameraMatrices
@@ -41,9 +44,6 @@ namespace ikk
                         mat4 projection;
                         mat4 view;
                     };
-
-                    out vec4 fragColor;
-                    out vec2 fragPosWorld;
 
                     void main()
                     {
@@ -55,7 +55,7 @@ namespace ikk
                         gl_Position = projection * view * model3D * vec4(position, 1.0);
 
                         fragColor = color;
-                        fragPosWorld = (model * vec3(position.xy, 1.0)).xy;
+                        fragTexCoord = texCoord;
                     }
                     )"
                 },
@@ -64,27 +64,20 @@ namespace ikk
                     R"(
                     #version 460 core
 
-                    uniform mat3 model;
-
                     in vec4 fragColor;
-                    in vec2 fragPosWorld;
+                    in vec2 fragTexCoord;
 
                     out vec4 color;
 
+                    uniform sampler2D fontAtlas;
+
                     void main()
                     {
-                        //Goes from 0.0 to 0.5
-                        float radius = 0.3; // TODO: Pass as uniform
+                        float alpha = texture(fontAtlas, fragTexCoord).r;
+                        if (alpha != 1.0)
+                            discard;
 
-                        vec2 fragPos = (inverse(model) * vec3(fragPosWorld, 1.0)).xy;
-
-                        vec2 inner = clamp(fragPos, vec2(radius), vec2(1.0) - vec2(radius));
-                        float dist = length(fragPos - inner);
-                        float alpha = 1.0 - smoothstep(radius - 0.01, radius + 0.01, dist);
-
-                        if (alpha < 0.05) discard;
-
-                        color = vec4(fragColor.rgb, fragColor.a * alpha);
+                        color = vec4(fragColor.rgb, alpha);
                     }
                     )"
                 }

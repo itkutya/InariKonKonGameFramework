@@ -2,13 +2,14 @@
 
 #include "InariKonKon/UI/Widgets/Button.hpp"
 #include "InariKonKon/Assets/Font/Font.hpp"
+#include "InariKonKon/UI/Widgets/Text.hpp"
 
 class MainMenu final : public ikk::Layer
 {
 public:
     MainMenu() noexcept
+        : text(font, U"Hello World", {255.f, 155.f }, {1.f, 1.f}, {}, ikk::Color::Teto)
     {
-        ikk::Font font{ikk::File{"/home/itkutya/Documents/c++/InariKonKon/resources/Ubuntu-Regular.ttf"}, 32};
     }
 
     void onEvent(const ikk::Event& event) noexcept override
@@ -17,18 +18,21 @@ public:
 
     void onUpdate(const ikk::Time& dt) noexcept override
     {
-        if (button.getState() == ikk::Button::State::Held)
-            button.setColor(ikk::Color::Teto);
-        else
-            button.setColor(ikk::Color::Miku);
+        //if (button.getState() == ikk::Button::State::Held)
+        //    button.setColor(ikk::Color::Teto);
+        //else
+        //    button.setColor(ikk::Color::Miku);
     }
 
     void onRender(const ikk::Window& window) const noexcept override
     {
-        window.draw(button);
+        //window.draw(button);
+        window.draw(text);
     }
 
-    ikk::Button button{"Button", { 100.f, 100.f }, { 100.f, 100.f }, {25.f}, ikk::Color::Miku};
+    //ikk::Button button{"Button", { 100.f, 100.f }, { 100.f, 100.f }, {25.f}, ikk::Color::Miku};
+    ikk::Font font{ikk::File{"/home/itkutya/Documents/c++/InariKonKon/resources/BaeFont-Regular.ttf"}, 32};
+    ikk::Text text;
 };
 
 int main()

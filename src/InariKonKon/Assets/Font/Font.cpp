@@ -115,4 +115,9 @@ namespace ikk
         FT_Done_Face(face);
         FT_Done_FreeType(library);
     }
+
+    const Font::Atlas& Font::getAtlas() const noexcept
+    {
+        return this->m_atlas;
+    }
 }
