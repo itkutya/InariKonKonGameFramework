@@ -41,5 +41,10 @@ namespace ikk
             }, transform.value());
 
         window.getRenderer()->draw(entity);
+
+        //TODO:
+        //Better solution...
+        if (component.getCallback())
+            component.getCallback()(window);
     }
 }

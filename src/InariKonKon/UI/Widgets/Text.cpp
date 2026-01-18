@@ -1,5 +1,7 @@
 #include "InariKonKon/UI/Widgets/Text.hpp"
 
+#include <algorithm>
+
 namespace ikk
 {
     Model createModelFromText(const Font& font, std::u32string_view text, Color color) noexcept
@@ -10,7 +12,21 @@ namespace ikk
         std::vector<std::uint32_t> indexBuffer{};
         indexBuffer.reserve(text.size() * 6u);
 
-        float x = 0.f;
+        if (text.size() == 0)
+            return Model{ vertexBuffer, indexBuffer };
+
+        float maxBearing = 0.f;
+        for (const char32_t& c : text)
+        {
+            if (font.getAtlas().glyphs.contains(c) == false)
+                continue;
+
+            const Font::Glyph& glyph = font.getAtlas().glyphs.at(c);
+
+            maxBearing = std::max(maxBearing, (float)glyph.bearing.y());
+        }
+
+        float x = -(float)font.getAtlas().glyphs.at(text.at(0)).bearing.x();
         for (const char32_t& c : text)
         {
             //TODO:
@@ -24,7 +40,7 @@ namespace ikk
             const float h = glyph.size.y();
 
             const float xpos = x + glyph.bearing.x();
-            const float ypos = font.baseline - glyph.bearing.y();
+            const float ypos = maxBearing - glyph.bearing.y();
 
             const std::uint32_t startIndex = U32(vertexBuffer.size());
 
@@ -119,5 +135,9 @@ namespace ikk
             &font.getAtlas().texture),
         m_text(text)
     {
+        //TODO:
+        //Text aligment
+        //Text rendering...
+        //Hide font base line...
     }
 }

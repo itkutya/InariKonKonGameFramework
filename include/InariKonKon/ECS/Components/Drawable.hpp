@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "InariKonKon/Assets/Shader/ShaderProgram.hpp"
 #include "InariKonKon/ECS/Entities/Camera/Camera.hpp"
 #include "InariKonKon/Assets/Texture/Texture.hpp"
@@ -7,13 +9,16 @@
 
 namespace ikk
 {
+    class Window;
+
     class [[nodiscard]] Drawable final
     {
     public:
         //TODO:
         //Type
 
-        [[nodiscard]] Drawable(const Model& model, const ShaderProgram& shaderProgram, const Camera& camera, const Texture* texture = nullptr) noexcept;
+        [[nodiscard]] Drawable(const Model& model, const ShaderProgram& shaderProgram, const Camera& camera,
+            const Texture* texture = nullptr, std::function<void(const Window& window)> drawCallback = {}) noexcept;
 
         Drawable(const Drawable& other) noexcept = default;
         Drawable(Drawable&& other) noexcept = default;
@@ -32,6 +37,7 @@ namespace ikk
         const Camera& getCamera() const noexcept;
 
         const Texture* getTexture() const noexcept;
+        const std::function<void(const Window& window)>& getCallback() const noexcept;
     private:
         bool m_disabled = true;
         
@@ -39,5 +45,7 @@ namespace ikk
         const Camera* m_camera = nullptr;
         const Model* m_model = nullptr;
         const Texture* m_texture = nullptr;
+
+        std::function<void(const Window& window)> m_drawCallback;
     };
 }

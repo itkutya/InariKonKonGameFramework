@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "InariKonKon/Assets/Shader/ShaderProgram.hpp"
 #include "InariKonKon/Assets/Texture/Texture.hpp"
 #include "InariKonKon/Assets/Model/Model.hpp"
@@ -17,6 +19,8 @@
 
 namespace ikk
 {
+    class Window;
+
     class [[nodiscard]] Widget : public UI
     {
     public:
@@ -32,7 +36,7 @@ namespace ikk
         //TODO:
         //Rest...
     protected:
-        [[nodiscard]] Widget(const UI::Data& data, const Model& model, const ShaderProgram& shader, const Texture* texture = nullptr) noexcept;
+        [[nodiscard]] Widget(const UI::Data& data, const Model& model, const ShaderProgram& shader, const Texture* texture = nullptr, std::function<void(const Window& window)> drawCallback = {}) noexcept;
 
         Widget(const Widget&) noexcept = default;
         Widget(Widget&&) noexcept = default;

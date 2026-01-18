@@ -4,7 +4,7 @@
 
 namespace ikk
 {
-    Widget::Widget(const UI::Data& data, const Model& model, const ShaderProgram& shader, const Texture* texture) noexcept
+    Widget::Widget(const UI::Data& data, const Model& model, const ShaderProgram& shader, const Texture* texture, std::function<void(const Window& window)> drawCallback) noexcept
         : UI(data), m_model(model), m_shader(shader)
     {
         static Camera defaultUICamera{ Camera::Type::None, {}, 0.f, 0.f, -1.f, 1.f };
@@ -13,7 +13,8 @@ namespace ikk
                 this->m_model,
                 this->m_shader,
                 defaultUICamera,
-                texture
+                texture,
+                drawCallback
             });
     }
 

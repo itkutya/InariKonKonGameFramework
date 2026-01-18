@@ -1,6 +1,7 @@
 #include "InariKonKon/UI/Widgets/Button.hpp"
 
 #include "InariKonKon/ECS/Components/Updateable.hpp"
+#include "InariKonKon/Core/Window/Window.hpp"
 #include "InariKonKon/Math/Rect.hpp"
 
 namespace ikk
@@ -65,8 +66,10 @@ namespace ikk
         : Widget(
             { position, size, rotation },
             Model::Square<UIVertex>,
-            ShaderProgram{buttonVertexShader, buttonFragmentShader}),
-            m_text(s_font, text, position, { 1.f, 1.f }, rotation, Color::Teto)
+            ShaderProgram{buttonVertexShader, buttonFragmentShader},
+            nullptr,
+            [&](const Window& window) noexcept{ window.draw(this->m_text); }),
+            m_text(s_font, text, position, { 1.f, 1.f }, rotation, Color::Rin)
     {
         this->getShaderProgram().setUniform("cornerRadius", cornerRadius);
 

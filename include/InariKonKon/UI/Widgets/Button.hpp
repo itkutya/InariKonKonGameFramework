@@ -28,10 +28,9 @@ namespace ikk
         [[nodiscard]] const State& getState() const noexcept;
 
         [[nodiscard]] bool isPressed() const noexcept;
-        //
-        Text m_text;
-        //
     private:
+        Text m_text;
+
         State m_state = State::None;
         State m_prevState = State::None;
         bool m_hovered = false;

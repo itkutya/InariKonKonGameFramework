@@ -25,7 +25,6 @@ public:
     void onRender(const ikk::Window& window) const noexcept override
     {
         window.draw(button);
-        window.draw(button.m_text);
         window.draw(text);
     }
 
