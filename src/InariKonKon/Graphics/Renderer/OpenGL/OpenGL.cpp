@@ -29,7 +29,7 @@ namespace ikk
         //TODO:
         glCheck(glEnable(GL_STENCIL_TEST));
         glCheck(glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE));
-        glCheck(glEnable(GL_DEPTH_TEST));
+        glCheck(glDisable(GL_DEPTH_TEST));
         glCheck(glEnable(GL_BLEND));
         glCheck(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     }

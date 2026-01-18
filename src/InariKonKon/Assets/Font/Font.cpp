@@ -29,6 +29,7 @@ namespace ikk
         if (FT_Set_Pixel_Sizes(face, 0, fontSize) != 0) { FT_Done_Face(face); FT_Done_FreeType(library);return; }
 
         this->m_atlas.glyphs.reserve(face->num_glyphs);
+        this->baseline = face->ascender * fontSize / (float)face->units_per_EM;
 
         static constexpr std::uint32_t maxTextureWidth = 1024;
         static constexpr std::uint32_t padding = 5u;

@@ -1,9 +1,7 @@
 #pragma once
 
-#include <string>
-
 #include "InariKonKon/Core/Event/EventListener.hpp"
-#include "InariKonKon/UI/Widgets/Widget.hpp"
+#include "InariKonKon/UI/Widgets/Text.hpp"
 
 namespace ikk
 {
@@ -17,7 +15,7 @@ namespace ikk
             Pressed, Held, Withheld, None
         };
 
-        [[nodiscard]] Button(std::string_view text, Vec2f position = {}, Vec2f size = { 1, 1 }, Degreef rotation = {}, Color color = Color::White, float cornerRadius = 0.0f) noexcept;
+        [[nodiscard]] Button(std::u32string_view text, Vec2f position = {}, Vec2f size = { 1, 1 }, Degreef rotation = {}, Color color = Color::White, float cornerRadius = 0.0f) noexcept;
 
         Button(const Button&) noexcept = default;
         Button(Button&&) noexcept = default;
@@ -30,8 +28,10 @@ namespace ikk
         [[nodiscard]] const State& getState() const noexcept;
 
         [[nodiscard]] bool isPressed() const noexcept;
+        //
+        Text m_text;
+        //
     private:
-        std::string m_text{};
         State m_state = State::None;
         State m_prevState = State::None;
         bool m_hovered = false;

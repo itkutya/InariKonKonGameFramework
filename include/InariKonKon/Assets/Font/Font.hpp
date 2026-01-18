@@ -41,6 +41,8 @@ namespace ikk
         ~Font() noexcept = default;
 
         const Atlas& getAtlas() const noexcept;
+
+        float baseline = 0.f;
     private:
         std::uint32_t m_fontSize = 0;
 

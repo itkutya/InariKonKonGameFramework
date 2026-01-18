@@ -59,12 +59,14 @@ namespace ikk
             color = vec4(fragColor.rgb, fragColor.a * alpha);
         })";
 
-    Button::Button(std::string_view text, Vec2f position, Vec2f size, Degreef rotation, Color color, float cornerRadius) noexcept
+    static ikk::Font s_font{ikk::File{"/home/itkutya/Documents/c++/InariKonKon/resources/Ubuntu-Regular.ttf"}, 32};
+
+    Button::Button(std::u32string_view text, Vec2f position, Vec2f size, Degreef rotation, Color color, float cornerRadius) noexcept
         : Widget(
             { position, size, rotation },
             Model::Square<UIVertex>,
             ShaderProgram{buttonVertexShader, buttonFragmentShader}),
-            m_text(text)
+            m_text(s_font, text, position, { 1.f, 1.f }, rotation, Color::Teto)
     {
         this->getShaderProgram().setUniform("cornerRadius", cornerRadius);
 

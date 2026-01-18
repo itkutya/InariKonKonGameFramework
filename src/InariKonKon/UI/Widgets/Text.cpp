@@ -20,24 +20,24 @@ namespace ikk
 
             const Font::Glyph& glyph = font.getAtlas().glyphs.at(c);
 
-            const float xpos = x + glyph.bearing.x();
-            const float ypos = -glyph.bearing.y();
+            const float w = glyph.size.x();
+            const float h = glyph.size.y();
 
-            const std::uint32_t w = glyph.size.x();
-            const std::uint32_t h = glyph.size.y();
+            const float xpos = x + glyph.bearing.x();
+            const float ypos = font.baseline - glyph.bearing.y();
 
             const std::uint32_t startIndex = U32(vertexBuffer.size());
 
             vertexBuffer.emplace_back(UIVertex{
-                .position = { xpos, ypos + h },
+                .position = { xpos, ypos },
                 .color    = color,
-                .texCoord = { glyph.textureRect.getLeft(),  glyph.textureRect.getBottom() }
+                .texCoord = { glyph.textureRect.getLeft(), glyph.textureRect.getTop() }
             });
 
             vertexBuffer.emplace_back(UIVertex{
-                .position = { xpos, ypos },
+                .position = { xpos, ypos + h },
                 .color    = color,
-                .texCoord = { glyph.textureRect.getLeft(),  glyph.textureRect.getTop() }
+                .texCoord = { glyph.textureRect.getLeft(), glyph.textureRect.getBottom() }
             });
 
             vertexBuffer.emplace_back(UIVertex{
@@ -56,8 +56,8 @@ namespace ikk
             indexBuffer.emplace_back(startIndex + 1);
             indexBuffer.emplace_back(startIndex + 2);
 
-            indexBuffer.emplace_back(startIndex + 0);
             indexBuffer.emplace_back(startIndex + 2);
+            indexBuffer.emplace_back(startIndex + 1);
             indexBuffer.emplace_back(startIndex + 3);
 
             x += glyph.advance.x();
