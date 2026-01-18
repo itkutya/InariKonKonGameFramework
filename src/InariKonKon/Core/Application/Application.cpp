@@ -4,6 +4,7 @@
 
 #include "InariKonKon/ECS/Systems/Updater.hpp"
 #include "InariKonKon/Utility/Log.hpp"
+#include "InariKonKon/ECS/ECS.hpp"
 
 namespace ikk
 {

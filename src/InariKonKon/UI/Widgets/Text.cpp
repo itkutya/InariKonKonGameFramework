@@ -137,7 +137,5 @@ namespace ikk
     {
         //TODO:
         //Text aligment
-        //Text rendering...
-        //Hide font base line...
     }
 }

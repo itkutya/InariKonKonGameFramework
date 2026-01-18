@@ -1,12 +1,11 @@
 #pragma once
 
-#include <utility>
+#include <unordered_map>
 
 #include "InariKonKon/Graphics/Renderer/Renderer.hpp"
 
 namespace ikk
 {
-    class Entity;
     class Camera;
 
     class [[nodiscard]] OpenGL final : public Renderer
@@ -38,29 +37,19 @@ namespace ikk
 
         void createContext(const Window& window) const noexcept override;
 
-        void registerEntity(const Entity& entity) noexcept override;
+        void registerEntity(const Drawable& entity) noexcept override;
 
         void updateUnifromBufferObjects(const Window& window) noexcept override;
 
         void onWindowResize(Vec2u newSize) const noexcept override;
         void onFramebufferResize(Vec2u newSize) const noexcept override;
 
-        void draw(const Entity& entity) const noexcept override;
+        void draw(const Drawable& entity) const noexcept override;
 
         void newFrame(const Color& color) const noexcept override;
         void endFrame(const Window& window) const noexcept override;
     private:
-        std::vector<std::pair<const Entity*, OpenGLObject>> m_objects = {};
-        std::vector<std::pair<const Camera*, CameraUniformBufferObject>> m_ubos = {};
-
-        constexpr auto matchEntity(const Entity& entity) const noexcept;
+        std::unordered_map<const Drawable*, OpenGLObject> m_objects = {};
+        std::unordered_map<const Camera*, CameraUniformBufferObject> m_ubos = {};
     };
-
-    constexpr auto OpenGL::matchEntity(const Entity& entity) const noexcept
-    {
-        return [&entity](const std::pair<const Entity*, OpenGLObject>& pair) noexcept -> bool
-        {
-            return pair.first == &entity;
-        };
-    }
 }

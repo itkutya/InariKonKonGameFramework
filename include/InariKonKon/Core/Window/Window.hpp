@@ -13,6 +13,8 @@ struct GLFWwindow;
 
 namespace ikk
 {
+    class Entity;
+
     class [[nodiscard]] Window final
     {
     public:

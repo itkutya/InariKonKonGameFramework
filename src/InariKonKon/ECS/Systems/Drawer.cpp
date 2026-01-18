@@ -40,11 +40,6 @@ namespace ikk
                 shader.setUniform("model", transform->getWorldMatrix());
             }, transform.value());
 
-        window.getRenderer()->draw(entity);
-
-        //TODO:
-        //Better solution...
-        if (component.getCallback())
-            component.getCallback()(window);
+        component.draw(window);
     }
 }

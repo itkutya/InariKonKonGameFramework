@@ -1,7 +1,5 @@
 #include "InariKonKon/Core/Window/Window.hpp"
 
-#include "GLFW/glfw3.h"
-
 #include "InariKonKon/Core/ExternalLibraries/GLFW.hpp" // IWYU pragma: keep
 
 #include "InariKonKon/Core/Event/EventCallbackFuncs.hpp"
@@ -119,7 +117,7 @@ namespace ikk
     {
         if (const std::expected<Drawable*, Error>& drawable = entity.getComponent<Drawable>(); drawable.has_value() == true)
         {
-            this->m_renderer->registerEntity(entity);
+            this->m_renderer->registerEntity(*drawable.value());
             drawable.value()->setActive();
         }
         else

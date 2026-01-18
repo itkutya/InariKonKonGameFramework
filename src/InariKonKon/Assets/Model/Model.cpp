@@ -22,7 +22,12 @@ namespace ikk
         return this->m_vertexStride;
     }
 
-    const bool Model::isDirty() const noexcept
+    std::size_t Model::getVertexCount() const noexcept
+    {
+        return this->m_vertexBuffer.size() / this->m_vertexStride;
+    }
+
+    bool Model::isDirty() const noexcept
     {
         return this->m_dirty;
     }

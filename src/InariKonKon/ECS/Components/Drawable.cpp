@@ -1,5 +1,7 @@
 #include "InariKonKon/ECS/Components/Drawable.hpp"
 
+#include "InariKonKon/Core/Window/Window.hpp"
+
 namespace ikk
 {
     Drawable::Drawable(const Model& model, const ShaderProgram& shaderProgram, const Camera& camera, const Texture* texture, std::function<void(const Window& window)> drawCallback) noexcept
@@ -37,8 +39,11 @@ namespace ikk
         return this->m_texture;
     }
 
-    const std::function<void(const Window& window)>& Drawable::getCallback() const noexcept
+    void Drawable::draw(const Window& window) const noexcept
     {
-        return this->m_drawCallback;
+        window.getRenderer()->draw(*this);
+
+        if (this->m_drawCallback)
+            this->m_drawCallback(window);
     }
 }

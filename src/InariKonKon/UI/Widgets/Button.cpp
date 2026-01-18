@@ -68,7 +68,7 @@ namespace ikk
             Model::Square<UIVertex>,
             ShaderProgram{buttonVertexShader, buttonFragmentShader},
             nullptr,
-            [&](const Window& window) noexcept{ window.draw(this->m_text); }),
+            [&](const Window& window) noexcept { window.draw(this->m_text); }),
             m_text(s_font, text, position, { 1.f, 1.f }, rotation, Color::Rin)
     {
         this->getShaderProgram().setUniform("cornerRadius", cornerRadius);

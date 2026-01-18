@@ -34,14 +34,12 @@ namespace ikk
         glCheck(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     }
 
-    void OpenGL::registerEntity(const Entity& entity) noexcept
+    void OpenGL::registerEntity(const Drawable& entity) noexcept
     {
-        if (std::find_if(this->m_objects.begin(), this->m_objects.end(), this->matchEntity(entity)) != this->m_objects.end())
+        if (this->m_objects.contains(&entity) == true)
             return;
 
-        const Drawable* drawable = entity.getComponent<Drawable>().value();
-
-        const Model& model = drawable->getModel();
+        const Model& model = entity.getModel();
         const std::vector<std::byte>& vertices = model.getRawVertexBuffer();
 
         if (vertices.empty() == true)
@@ -91,14 +89,9 @@ namespace ikk
 
         glCheck(glBindVertexArray(0));
 
-        const Camera& camera = entity.getComponent<Drawable>().value()->getCamera();
-        const auto it = std::find_if(this->m_ubos.begin(), this->m_ubos.end(),
-            [&camera](const std::pair<const Camera*, CameraUniformBufferObject>& pair) 
-            {
-                return &camera == pair.first;
-            });
-
-        if (it == this->m_ubos.end())
+        //TODO: glCheck()
+        const Camera& camera = entity.getCamera();
+        if (this->m_ubos.contains(&camera) == false)
         {
             CameraUniformBufferObject object{};
             glGenBuffers(1, &object.UBO);
@@ -106,7 +99,7 @@ namespace ikk
             glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(Mat4x4f), NULL, GL_STATIC_DRAW);
             glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-            const ShaderProgram& shader = entity.getComponent<Drawable>().value()->getShaderProgram();
+            const ShaderProgram& shader = entity.getShaderProgram();
 
             glUniformBlockBinding(shader.getID(),
                 glGetUniformBlockIndex(shader.getID(), "CameraMatrices"), 0);
@@ -115,34 +108,41 @@ namespace ikk
             //TODO:
             object.ignoreZ = true;
 
-            this->m_ubos.emplace_back(&camera, std::move(object));
+            this->m_ubos.emplace(&camera, std::move(object));
         }
 
-        const Texture* texture = drawable->getTexture();
+        //TODO: glCheck()
+        const Texture* texture = entity.getTexture();
         if (texture != nullptr)
         {
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+            if (texture->getBytesPerPixel() == 1)
+                glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
             glGenTextures(1, &temp.textureID);
+            //TODO:
+            //activate texture binding spot as well
+            //TODO:
             glBindTexture(GL_TEXTURE_2D, temp.textureID);
             glTexImage2D(
                 GL_TEXTURE_2D,
                 0,
-                GL_RED,
+                GL_RED, //TODO:
                 texture->getWidth(),
                 texture->getHeight(),
                 0,
-                GL_RED,
+                GL_RED, //TODO:
                 GL_UNSIGNED_BYTE,
-                &texture->getBuffer().at(0)
+                texture->getBuffer().data()
             );
 
+            //TODO:
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         }
 
-        this->m_objects.emplace_back(&entity, std::move(temp));
+        this->m_objects.emplace(&entity, std::move(temp));
     }
 
     void OpenGL::updateUnifromBufferObjects(const Window& window) noexcept
@@ -152,16 +152,17 @@ namespace ikk
             glCheck(glBindBuffer(GL_UNIFORM_BUFFER, object.UBO));
             if (object.ignoreZ == true)
             {
-                glCheck(glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Mat4x4f),
-                    &(camera->getProjectionMatrix(window.getViewport()).convertTo<MatrixOrdering::ColumnMajor>().at(0, 0))));
+                const auto projectionMatrix = camera->getProjectionMatrix(window.getViewport()).convertTo<MatrixOrdering::ColumnMajor>();
+                glCheck(glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Mat4x4f), &projectionMatrix.at(0, 0)));
             }
             else
             {
-                glCheck(glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Mat4x4f),
-                    &(camera->getProjectionMatrix(window.getAscpectRation()).convertTo<MatrixOrdering::ColumnMajor>().at(0, 0))));
+                const auto projectionMatrix = camera->getProjectionMatrix(window.getAscpectRation()).convertTo<MatrixOrdering::ColumnMajor>();
+                glCheck(glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(Mat4x4f), &projectionMatrix.at(0, 0)));
             }
-            glCheck(glBufferSubData(GL_UNIFORM_BUFFER, sizeof(Mat4x4f), sizeof(Mat4x4f),
-                &(camera->getViewMatrix().convertTo<MatrixOrdering::ColumnMajor>().at(0, 0))));
+
+            const auto viewMatrix = camera->getViewMatrix().convertTo<MatrixOrdering::ColumnMajor>();
+            glCheck(glBufferSubData(GL_UNIFORM_BUFFER, sizeof(Mat4x4f), sizeof(Mat4x4f), &viewMatrix.at(0, 0)));
             glCheck(glBindBuffer(GL_UNIFORM_BUFFER, 0));
         }
     }
@@ -175,45 +176,41 @@ namespace ikk
         glCheck(glViewport(0, 0, newSize.x(), newSize.y()));
     }
 
-    void OpenGL::draw(const Entity& entity) const noexcept
+    void OpenGL::draw(const Drawable& entity) const noexcept
     {
-        const auto it = std::find_if(this->m_objects.begin(), this->m_objects.end(), this->matchEntity(entity));
-
-        if (it == this->m_objects.end())
+        if (this->m_objects.contains(&entity) == false) //TODO: ERROR REPORT, register entity first --> call window.draw(entity);
             return;
+
+        const OpenGLObject& object = this->m_objects.at(&entity);
 
         glCheck(glStencilFunc(GL_ALWAYS, 1, 0xFF));
         glCheck(glStencilMask(0xFF));
 
-        const Drawable* drawable = entity.getComponent<Drawable>().value();
-        const std::vector<std::uint32_t>& indices = drawable->getModel().getIndices();
-        const ShaderProgram& shader = drawable->getShaderProgram();
-        const Model& model = drawable->getModel();
-
+        const Model& model = entity.getModel();
         if (model.isDirty() == true)
         {
             const std::vector<std::byte>& vertices = model.getRawVertexBuffer();
-            glCheck(glBindBuffer(GL_ARRAY_BUFFER, it->second.VBO));
+            glCheck(glBindBuffer(GL_ARRAY_BUFFER, object.VBO));
             glCheck(glBufferData(GL_ARRAY_BUFFER, vertices.size(), &vertices.at(0), GL_DYNAMIC_DRAW));
             model.setDirty(false);
         }
 
-        shader.activate();
+        entity.getShaderProgram().activate();
 
         //
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, it->second.textureID);
+        glBindTexture(GL_TEXTURE_2D, object.textureID);
         //
 
-        glCheck(glBindVertexArray(it->second.VAO));
-        if (indices.empty() == true)
+        glCheck(glBindVertexArray(object.VAO));
+        const std::vector<std::uint32_t>& indices = entity.getModel().getIndices();
+        if (indices.size() > 0)
         {
-            const std::size_t verticesCount = drawable->getModel().getRawVertexBuffer().size() / drawable->getModel().getVertexStride();
-            glCheck(glDrawArrays(GL_TRIANGLES, 0, verticesCount));
+            glCheck(glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0));
         }
         else
         {
-            glCheck(glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0));
+            glCheck(glDrawArrays(GL_TRIANGLES, 0, model.getVertexCount()));
         }
     }
 

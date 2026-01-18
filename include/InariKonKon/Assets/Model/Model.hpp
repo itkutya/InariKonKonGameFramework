@@ -39,9 +39,11 @@ namespace ikk
         [[nodiscard]] const std::vector<VertexAttribute>& getVertexAttributes() const noexcept;
         [[nodiscard]] const std::vector<std::byte>& getRawVertexBuffer() const noexcept;
         [[nodiscard]] const std::vector<std::uint32_t>& getIndices() const noexcept;
-        [[nodiscard]] std::size_t getVertexStride() const noexcept;
 
-        const bool isDirty() const noexcept;
+        [[nodiscard]] std::size_t getVertexStride() const noexcept;
+        [[nodiscard]] std::size_t getVertexCount() const noexcept;
+
+        bool isDirty() const noexcept;
         void setDirty(bool dirty) const noexcept; //TODO: might not want to do this...
 
         template<VertexType VertexType>

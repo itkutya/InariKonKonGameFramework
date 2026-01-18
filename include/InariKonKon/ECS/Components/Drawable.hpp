@@ -15,7 +15,16 @@ namespace ikk
     {
     public:
         //TODO:
-        //Type
+        enum struct Type : std::uint8_t
+        {
+
+        };
+
+        //TODO: like transparet & other stuff...
+        enum struct Flags : std::uint32_t
+        {
+            
+        };
 
         [[nodiscard]] Drawable(const Model& model, const ShaderProgram& shaderProgram, const Camera& camera,
             const Texture* texture = nullptr, std::function<void(const Window& window)> drawCallback = {}) noexcept;
@@ -37,7 +46,6 @@ namespace ikk
         const Camera& getCamera() const noexcept;
 
         const Texture* getTexture() const noexcept;
-        const std::function<void(const Window& window)>& getCallback() const noexcept;
     private:
         bool m_disabled = true;
         
@@ -47,5 +55,9 @@ namespace ikk
         const Texture* m_texture = nullptr;
 
         std::function<void(const Window& window)> m_drawCallback;
+
+        void draw(const Window& window) const noexcept;
+
+        friend class Drawer;
     };
 }
